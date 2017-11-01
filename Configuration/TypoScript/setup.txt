@@ -1,0 +1,13 @@
+plugin {
+    tx_searchcore {
+        settings {
+            connections {
+                algolia {
+                    applicationID = {$plugin.tx_searchalgolia.settings.connections.algolia.applicationID}
+                    apiKey = {$plugin.tx_searchalgolia.settings.connections.algolia.apiKey}
+                    indexName = {$plugin.tx_searchalgolia.settings.connections.algolia.indexName}
+                }
+            }
+        }
+    }
+}

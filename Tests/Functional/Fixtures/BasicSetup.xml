@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <pages>
+        <uid>1</uid>
+        <pid>0</pid>
+        <title>Root page containing necessary TypoScript</title>
+        <description>Used as abstract as no abstract is defined.</description>
+    </pages>
+</dataset>
