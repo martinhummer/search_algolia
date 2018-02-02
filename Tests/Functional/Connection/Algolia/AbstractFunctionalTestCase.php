@@ -1,4 +1,5 @@
 <?php
+
 namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 
 /*
@@ -36,6 +37,11 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
      */
     protected $client;
 
+    /**
+     * @var \AlgoliaSearch\Index
+     * */
+    protected $algoliaIndex;
+
     protected $configuration;
 
     public function setUp()
@@ -49,6 +55,10 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
         $this->client = new \AlgoliaSearch\Client(
             $this->configuration->get('connections.algolia.applicationID'),
             $this->configuration->get('connections.algolia.apiKey')
+        );
+
+        $this->algoliaIndex = $this->client->initIndex(
+            $this->configuration->get('connections.algolia.indexName')
         );
 
         // Start with clean system for test.

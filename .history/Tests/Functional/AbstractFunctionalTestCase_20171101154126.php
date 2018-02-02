@@ -1,5 +1,4 @@
 <?php
-
 namespace Mahu\SearchAlgolia\Tests\Functional;
 
 /*
@@ -28,12 +27,14 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as CoreTestCase;
  */
 abstract class AbstractFunctionalTestCase extends CoreTestCase
 {
-    protected $testExtensionsToLoad = ['typo3conf/ext/search_algolia', 'typo3conf/ext/news'];
+    protected $testExtensionsToLoad = ['typo3conf/ext/search_algolia'];
 
     /**
      * @var ConfigurationContainerInterface
      */
     protected $configuration;
+
+
 
     public function setUp()
     {

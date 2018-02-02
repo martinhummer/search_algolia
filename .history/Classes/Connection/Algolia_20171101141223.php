@@ -1,5 +1,4 @@
 <?php
-
 namespace Mahu\SearchAlgolia\Connection;
 
 /*
@@ -21,6 +20,7 @@ namespace Mahu\SearchAlgolia\Connection;
  * 02110-1301, USA.
  */
 
+use Codappix\SearchCore\Connection\Elasticsearch\SearchResult;
 use Codappix\SearchCore\Connection\SearchRequestInterface;
 use Codappix\SearchCore\Connection\SearchResultInterface;
 use Codappix\SearchCore\Domain\Search\QueryFactory;
@@ -37,6 +37,7 @@ class Algolia implements Singleton, ConnectionInterface
      * @var Algolia\Connection
      */
     protected $connection;
+
 
     /**
      * @var QueryFactory
@@ -86,13 +87,16 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocument($documentType, array $document)
     {
-        $this->connection->getIndex()->addObject($document); //PHP Algolia Search Client
+        $this->connection->getIndex()->addObject($document);
     }
+
+
 
     public function addDocuments($documentType, array $documents)
     {
-        $this->connection->getIndex()->addObjects($documents); //PHP Algolia Search Client
+        $this->connection->getIndex()->addObjects($documents);
     }
+
 
     /**
      * Will update an existing document.

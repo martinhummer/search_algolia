@@ -40,6 +40,30 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
+    public function indexBasicTtContent()
+    {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tt_content')
+            ->indexAllDocuments();
+
+        $searchQuery = $this->algoliaIndex->search('*');
+        print_r(array_keys($searchQuery));
+        /*$response = $this->client->request('typo3content/_search?q=*:*');
+
+        $this->assertTrue($response->isOK(), 'Elastica did not answer with ok code.');
+        $this->assertSame($response->getData()['hits']['total'], 2, 'Not exactly 2 documents were indexed.');
+        $this->assertArraySubset(
+            ['_source' => ['header' => 'indexed content element']],
+            $response->getData()['hits']['hits'][1],
+            false,
+            'Record was not indexed.'
+        );*/
+    }
+
+    /**
+     * @test
+     */
     public function indexNewsContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)

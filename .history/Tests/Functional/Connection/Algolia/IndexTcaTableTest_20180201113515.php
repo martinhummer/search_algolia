@@ -40,11 +40,11 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function indexNewsContent()
+    public function indexBasicTtContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
+            ->getIndexer('tt_content')
             ->indexAllDocuments();
 
         $searchQuery = $this->algoliaIndex->search('*');

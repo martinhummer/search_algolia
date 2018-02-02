@@ -25,8 +25,7 @@
         "php": ">=7.1.0",
         "typo3/cms": "~8.7",
         "codappix/search_core": "dev-develop",
-        "algolia/algoliasearch-client-php": "^1.23",
-        "georgringer/news": "^6.3"
+        "algolia/algoliasearch-client-php": "^1.23"
     },
     "require-dev": {
         "typo3/testing-framework": "~1.1.0",

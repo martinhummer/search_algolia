@@ -1,5 +1,4 @@
 <?php
-
 namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 
 /*
@@ -33,19 +32,20 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     {
         return array_merge(
             parent::getDataSets(),
-            ['Tests/Functional/Fixtures/Indexing/IndexNewsTable.xml']
+            ['Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
         );
     }
 
     /**
      * @test
      */
-    public function indexNewsContent()
+    public function indexBasicTtContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexAllDocuments();
+            ->getIndexer('tt_content')
+            ->indexAllDocuments()
+            ;
 
         $searchQuery = $this->algoliaIndex->search('*');
         print_r(array_keys($searchQuery));
@@ -60,4 +60,5 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             'Record was not indexed.'
         );*/
     }
+
 }

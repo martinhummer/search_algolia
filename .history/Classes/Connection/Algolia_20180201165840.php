@@ -86,12 +86,12 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocument($documentType, array $document)
     {
-        $this->connection->getIndex()->addObject($document); //PHP Algolia Search Client
+        $this->connection->getIndex()->addObject($document); //
     }
 
     public function addDocuments($documentType, array $documents)
     {
-        $this->connection->getIndex()->addObjects($documents); //PHP Algolia Search Client
+        $this->connection->getIndex()->addObjects($documents);
     }
 
     /**
