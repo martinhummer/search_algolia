@@ -121,7 +121,7 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function deleteDocument($documentType, $identifier)
     {
-        // TODO: Implement deleteDocument() method.
+        return $this->connection->getIndex()->deleteObject($document, $document['uid']); //PHP Algolia Search Client
     }
 
     /**

@@ -23,6 +23,8 @@ namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 
 use Codappix\SearchCore\Domain\Index\IndexerFactory;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Core\DataHandling\DataHandler as Typo3DataHandler;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * TODO: https://github.com/DanielSiepmann/search_core/issues/16
@@ -40,23 +42,29 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function indexNewsContent()
+    public function indexSingleNewsContent()
     {
-        $this->markTestSkipped('must be revisited.');
-
         $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tx_news_domain_model_news')
             ->indexDocument(456);
 
         $this->algoliaIndex->waitTask($request['taskID']);
-        $results = $this->algoliaIndex->search('*');
+        $response = $this->algoliaIndex->search('*');
+        
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+            [0 => ['title' => 'Single News Record']],
+            $response['hits'],
+            false,
+            'Single News Record was not indexed.'
+        );
     }
 
     /**
     * @test
     */
-    public function updateNewsContent()
+    public function updateSingleNewsContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
@@ -75,6 +83,36 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->indexDocument(456);
 
         $this->algoliaIndex->waitTask($request['taskID']);
-        $results = $this->algoliaIndex->search('*');
+        $response = $this->algoliaIndex->search('*');
+
+        $this->assertArraySubset(
+            [0 => ['title' => 'update the title']],
+            $response['hits'],
+            false,
+            'Record was not updated correctly.'
+        );
+    }
+
+    /**
+    * @test
+    */
+    public function deleteSingleNewsContent()
+    {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tx_news_domain_model_news')
+            ->indexDocument(456);
+
+            //TODO: find a solution to test this on the index
+            $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+            $tce->stripslashes_values = 0;
+            $tce->start([], [
+                'tx_news_domain_model_news' => [
+                    '456' => [
+                        'delete' => true,
+                    ],
+                ],
+            ]);
+            $tce->process_cmdmap();
     }
 }
