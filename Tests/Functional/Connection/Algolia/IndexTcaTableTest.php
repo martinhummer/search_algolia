@@ -42,13 +42,16 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
      */
     public function indexNewsContent()
     {
+        $this->markTestSkipped('must be revisited.');
+
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tx_news_domain_model_news')
-            ->indexAllDocuments();
+            ->indexDocument(456);
 
-        $searchQuery = $this->algoliaIndex->search('*');
-        print_r(array_keys($searchQuery));
+        //$searchQuery = $this->algoliaIndex->search('*');
+        //print_r(array_keys($searchQuery));
+
         /*$response = $this->client->request('typo3content/_search?q=*:*');
 
         $this->assertTrue($response->isOK(), 'Elastica did not answer with ok code.');
@@ -59,5 +62,45 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             false,
             'Record was not indexed.'
         );*/
+    }
+
+    /**
+    * @test
+    */
+    public function updateNewsContent()
+    {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tx_news_domain_model_news')
+            ->indexDocument(456);
+
+        $this->getConnectionPool()->getConnectionForTable('tx_news_domain_model_news')
+            ->update(
+                'tx_news_domain_model_news',
+                ['title' => 'update the title'],
+                ['uid' => 456]
+            );
+        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tx_news_domain_model_news')
+            ->indexDocument(456);
+
+       // $this->algoliaIndex->waitTask($request['taskID']);
+        //$results = $this->algoliaIndex->search('*');
+        //var_dump($results);
+        //$searchQuery = $this->algoliaIndex->search('*');
+        //print_r(array_keys($searchQuery));
+        //var_dump($searchQuery);
+    }
+
+    /**
+    * @test
+    */
+    public function searchNewsContent()
+    {
+        $this->markTestSkipped('must be revisited.');
+
+        $searchQuery = $this->algoliaIndex->search('*');
+        //var_dump($searchQuery);
     }
 }

@@ -3,7 +3,7 @@
 namespace Mahu\SearchAlgolia\DataProcessing;
 
 /*
- * Copyright (C) 2017  Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2018  Martin Hummer
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,9 +28,8 @@ namespace Mahu\SearchAlgolia\DataProcessing;
  */
 class NewsProcessor implements ProcessorInterface
 {
-    public function processRecord(array $record, array $configuration)
+    public function processRecord(array $record, array $configuration) : array
     {
-        debug($record);
         $all = [];
 
         $this->addArray($all, $record);

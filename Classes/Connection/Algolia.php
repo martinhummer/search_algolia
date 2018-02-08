@@ -86,7 +86,7 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocument($documentType, array $document)
     {
-        $this->connection->getIndex()->addObject($document); //PHP Algolia Search Client
+        return $this->connection->getIndex()->addObject($document, $document['uid']); //PHP Algolia Search Client
     }
 
     public function addDocuments($documentType, array $documents)
@@ -106,7 +106,7 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function updateDocument($documentType, array $document)
     {
-        // TODO: Implement updateDocument() method.
+        return $this->connection->getIndex()->addObject($document, $document['uid']); //Same as addDocument()
     }
 
     /**
@@ -135,4 +135,17 @@ class Algolia implements Singleton, ConnectionInterface
     {
         // TODO: Implement search() method.
     }
+
+    /**
+     * Will delete the whole index / db.
+     *
+     * @param string $documentType
+     *
+     * @return void
+     */
+    public function deleteIndex($documentType) {
+        // TODO: Implement deleteIndex() method.
+    }
+
+
 }
