@@ -44,24 +44,13 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     {
         $this->markTestSkipped('must be revisited.');
 
-        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tx_news_domain_model_news')
             ->indexDocument(456);
 
-        //$searchQuery = $this->algoliaIndex->search('*');
-        //print_r(array_keys($searchQuery));
-
-        /*$response = $this->client->request('typo3content/_search?q=*:*');
-
-        $this->assertTrue($response->isOK(), 'Elastica did not answer with ok code.');
-        $this->assertSame($response->getData()['hits']['total'], 2, 'Not exactly 2 documents were indexed.');
-        $this->assertArraySubset(
-            ['_source' => ['header' => 'indexed content element']],
-            $response->getData()['hits']['hits'][1],
-            false,
-            'Record was not indexed.'
-        );*/
+        $this->algoliaIndex->waitTask($request['taskID']);
+        $results = $this->algoliaIndex->search('*');
     }
 
     /**
@@ -85,22 +74,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->getIndexer('tx_news_domain_model_news')
             ->indexDocument(456);
 
-       // $this->algoliaIndex->waitTask($request['taskID']);
-        //$results = $this->algoliaIndex->search('*');
-        //var_dump($results);
-        //$searchQuery = $this->algoliaIndex->search('*');
-        //print_r(array_keys($searchQuery));
-        //var_dump($searchQuery);
-    }
-
-    /**
-    * @test
-    */
-    public function searchNewsContent()
-    {
-        $this->markTestSkipped('must be revisited.');
-
-        $searchQuery = $this->algoliaIndex->search('*');
-        //var_dump($searchQuery);
+        $this->algoliaIndex->waitTask($request['taskID']);
+        $results = $this->algoliaIndex->search('*');
     }
 }
