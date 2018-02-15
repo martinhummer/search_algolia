@@ -1,4 +1,5 @@
 <?php
+
 namespace Mahu\SearchAlgolia\Connection\Algolia;
 
 /*

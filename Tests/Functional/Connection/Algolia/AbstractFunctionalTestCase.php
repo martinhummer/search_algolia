@@ -24,6 +24,7 @@ namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 use Mahu\SearchAlgolia\Tests\Functional\AbstractFunctionalTestCase as BaseFunctionalTestCase;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use Codappix\SearchCore\Configuration\ConfigurationContainerInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * All functional tests should extend this base class.
@@ -44,12 +45,20 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
 
     protected $configuration;
 
+    /**
+     * @var \Mahu\SearchAlgolia\TaskObserver
+     * */
+    protected $taskObserver;
+
     public function setUp()
     {
         parent::setUp();
 
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class);
         $this->configuration = $objectManager->get(ConfigurationContainerInterface::class);
+
+        // Make instance of the TaskObserver which holds the current TaskId
+        $this->taskObserver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Connection\Algolia\TaskObserver');
 
         // Create client to make requests and assert something.
         $this->client = new \AlgoliaSearch\Client(

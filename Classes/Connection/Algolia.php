@@ -27,6 +27,7 @@ use Codappix\SearchCore\Domain\Search\QueryFactory;
 use TYPO3\CMS\Core\SingletonInterface as Singleton;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use Codappix\SearchCore\Connection\ConnectionInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Outer wrapper to algolia.
@@ -52,6 +53,10 @@ class Algolia implements Singleton, ConnectionInterface
      * @var ObjectManagerInterface
      */
     protected $objectManager;
+
+    protected $taskId;
+
+    protected $taskObserver;
 
     /**
      * Inject log manager to get concrete logger from it.
@@ -82,11 +87,14 @@ class Algolia implements Singleton, ConnectionInterface
     ) {
         $this->connection = $connection;
         $this->queryFactory = $queryFactory;
+        $this->taskObserver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Connection\Algolia\TaskObserver');
     }
 
     public function addDocument($documentType, array $document)
     {
-        return $this->connection->getIndex()->addObject($document, $document['uid']); //PHP Algolia Search Client
+        $request = $this->connection->getIndex()->addObject($document, $document['uid']); //PHP Algolia Search Client
+
+        $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
     }
 
     public function addDocuments($documentType, array $documents)
@@ -121,7 +129,11 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function deleteDocument($documentType, $identifier)
     {
-        return $this->connection->getIndex()->deleteObject($document, $document['uid']); //PHP Algolia Search Client
+        $this->taskObserver->setTaskId('delete'); //store the current taskId
+
+        $request = $this->connection->getIndex()->deleteObject($identifier); //PHP Algolia Search Client
+
+        //$this->taskObserver->setTaskId($request['taskID']); //store the current taskId
     }
 
     /**
@@ -143,9 +155,8 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @return void
      */
-    public function deleteIndex($documentType) {
+    public function deleteIndex($documentType)
+    {
         // TODO: Implement deleteIndex() method.
     }
-
-
 }

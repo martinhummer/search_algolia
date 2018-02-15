@@ -40,28 +40,6 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @test
-     */
-    public function indexSingleNewsContent()
-    {
-        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
-
-        $this->algoliaIndex->waitTask($request['taskID']);
-        $response = $this->algoliaIndex->search('*');
-        
-        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
-        $this->assertArraySubset(
-            [0 => ['title' => 'Single News Record']],
-            $response['hits'],
-            false,
-            'Single News Record was not indexed.'
-        );
-    }
-
-    /**
     * @test
     */
     public function updateSingleNewsContent()
@@ -74,22 +52,49 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $this->getConnectionPool()->getConnectionForTable('tx_news_domain_model_news')
             ->update(
                 'tx_news_domain_model_news',
-                ['title' => 'update the title'],
+                ['title' => 'update the title new'],
                 ['uid' => 456]
             );
-        $request = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tx_news_domain_model_news')
             ->indexDocument(456);
 
-        $this->algoliaIndex->waitTask($request['taskID']);
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->algoliaIndex->waitTask($taskId);
         $response = $this->algoliaIndex->search('*');
 
         $this->assertArraySubset(
-            [0 => ['title' => 'update the title']],
+            [0 => ['title' => 'update the title new']],
             $response['hits'],
             false,
             'Record was not updated correctly.'
+        );
+    }
+
+    /**
+     *
+     * @test
+     */
+    public function indexSingleNewsContent()
+    {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tx_news_domain_model_news')
+            ->indexDocument(456);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->algoliaIndex->waitTask($taskId);
+        $response = $this->algoliaIndex->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+            [0 => ['title' => 'Single News Record']],
+            $response['hits'],
+            false,
+            'Single News Record was not indexed.'
         );
     }
 
@@ -103,16 +108,28 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->getIndexer('tx_news_domain_model_news')
             ->indexDocument(456);
 
-            //TODO: find a solution to test this on the index
-            $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
-            $tce->stripslashes_values = 0;
-            $tce->start([], [
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        var_dump($taskId);
+        $this->algoliaIndex->waitTask($taskId);
+
+        //TODO: find a solution to test this on the index
+        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+        $tce->stripslashes_values = 0;
+        $tce->start([], [
                 'tx_news_domain_model_news' => [
                     '456' => [
                         'delete' => true,
                     ],
                 ],
             ]);
-            $tce->process_cmdmap();
+        $tce->process_cmdmap();
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        var_dump($taskId);
+        $this->algoliaIndex->waitTask($taskId);
+
+        $response = $this->algoliaIndex->search('*');
+
+        $this->assertSame($response['nbHits'], 0, 'Not exactly 0 documents were indexed.');
     }
 }
