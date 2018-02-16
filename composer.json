@@ -1,5 +1,5 @@
 {
-    "name": "mh/search-solr",
+    "name": "martinhummer/search-algolia",
     "type": "typo3-cms-extension",
     "description": "TYPO3 indexer for Algolia Search Engine",
     "keywords": [
@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Codappix/search_core.git"
+            "url": "https://github.com/martinhummer/search_algolia"
         }
     ],
     "require": {
@@ -26,11 +26,12 @@
         "typo3/cms": "~8.7",
         "codappix/search_core": "dev-develop",
         "algolia/algoliasearch-client-php": "^1.23",
-        "georgringer/news": "^6.3",
-        "typo3/testing-framework": "^2.0"
+        "georgringer/news": "^6.3"
+        
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.2.0"
+        "phpunit/phpunit": "~6.2.0",
+        "typo3/testing-framework": "^2.0"
     },
     "autoload": {
         "psr-4": {

@@ -41,7 +41,7 @@ class ProcessesAllowedTablesTest extends AbstractDataHandlerTest
     }
 
     /**
-     * @group grain
+     *
      * @test
      */
     public function deletionWillBeTriggeredForTtContent()
@@ -63,6 +63,7 @@ class ProcessesAllowedTablesTest extends AbstractDataHandlerTest
     }
 
     /**
+     * @group grain
      * @test
      */
     public function updateWillBeTriggeredForTtContent()

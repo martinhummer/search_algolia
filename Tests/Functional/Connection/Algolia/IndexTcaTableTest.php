@@ -40,6 +40,31 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
+     *
+     * @test
+     */
+    public function indexSingleNewsContent()
+    {
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tx_news_domain_model_news')
+            ->indexDocument(456);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->algoliaIndex->waitTask($taskId);
+        $response = $this->algoliaIndex->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+            [0 => ['title' => 'Single News Record']],
+            $response['hits'],
+            false,
+            'Single News Record was not indexed.'
+        );
+    }
+
+    /**
     * @test
     */
     public function updateSingleNewsContent()
@@ -74,31 +99,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     *
-     * @test
-     */
-    public function indexSingleNewsContent()
-    {
-        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
-            ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
-
-        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-
-        $this->algoliaIndex->waitTask($taskId);
-        $response = $this->algoliaIndex->search('*');
-
-        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
-        $this->assertArraySubset(
-            [0 => ['title' => 'Single News Record']],
-            $response['hits'],
-            false,
-            'Single News Record was not indexed.'
-        );
-    }
-
-    /**
+    * @group deleting
     * @test
     */
     public function deleteSingleNewsContent()
@@ -109,10 +110,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->indexDocument(456);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-        var_dump($taskId);
-        $this->algoliaIndex->waitTask($taskId);
+        $this->algoliaIndex->waitTask($taskId); //wait until Angolia has finished the task
 
-        //TODO: find a solution to test this on the index
         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
         $tce->stripslashes_values = 0;
         $tce->start([], [
@@ -125,8 +124,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $tce->process_cmdmap();
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-        var_dump($taskId);
-        $this->algoliaIndex->waitTask($taskId);
+        $this->algoliaIndex->waitTask($taskId); //wait until Angolia has finished the task
 
         $response = $this->algoliaIndex->search('*');
 
