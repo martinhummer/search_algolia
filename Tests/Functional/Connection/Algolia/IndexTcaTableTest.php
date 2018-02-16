@@ -3,7 +3,7 @@
 namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 
 /*
- * Copyright (C) 2016  Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2018  Martin Hummer <ma.hummer@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,16 +26,13 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\DataHandling\DataHandler as Typo3DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * TODO: https://github.com/DanielSiepmann/search_core/issues/16
- */
 class IndexTcaTableTest extends AbstractFunctionalTestCase
 {
     protected function getDataSets()
     {
         return array_merge(
             parent::getDataSets(),
-            ['Tests/Functional/Fixtures/Indexing/IndexNewsTable.xml']
+            ['Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
         );
     }
 
@@ -43,12 +40,12 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
      *
      * @test
      */
-    public function indexSingleNewsContent()
+    public function indexSingleTtContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
+            ->getIndexer('tt_content')
+            ->indexDocument(6);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
 
@@ -57,33 +54,33 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
 
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
         $this->assertArraySubset(
-            [0 => ['title' => 'Single News Record']],
+            [0 => ['header' => 'indexed content element']],
             $response['hits'],
             false,
-            'Single News Record was not indexed.'
+            'tt_content Record was not indexed.'
         );
     }
 
     /**
     * @test
     */
-    public function updateSingleNewsContent()
+    public function updateSingleTtContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
+            ->getIndexer('tt_content')
+            ->indexDocument(6);
 
-        $this->getConnectionPool()->getConnectionForTable('tx_news_domain_model_news')
+        $this->getConnectionPool()->getConnectionForTable('tt_content')
             ->update(
-                'tx_news_domain_model_news',
-                ['title' => 'update the title new'],
-                ['uid' => 456]
+                'tt_content',
+                ['header' => 'update the header new'],
+                ['uid' => 6]
             );
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
+            ->getIndexer('tt_content')
+            ->indexDocument(6);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
 
@@ -91,10 +88,10 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $response = $this->algoliaIndex->search('*');
 
         $this->assertArraySubset(
-            [0 => ['title' => 'update the title new']],
+            [0 => ['header' => 'update the header new']],
             $response['hits'],
             false,
-            'Record was not updated correctly.'
+            'tt_content record was not updated correctly.'
         );
     }
 
@@ -102,12 +99,12 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     * @group deleting
     * @test
     */
-    public function deleteSingleNewsContent()
+    public function deleteSingleTtContent()
     {
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
-            ->getIndexer('tx_news_domain_model_news')
-            ->indexDocument(456);
+            ->getIndexer('tt_content')
+            ->indexDocument(6);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
         $this->algoliaIndex->waitTask($taskId); //wait until Angolia has finished the task
@@ -115,8 +112,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
         $tce->stripslashes_values = 0;
         $tce->start([], [
-                'tx_news_domain_model_news' => [
-                    '456' => [
+                'tt_content' => [
+                    '6' => [
                         'delete' => true,
                     ],
                 ],

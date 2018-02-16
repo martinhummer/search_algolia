@@ -1,5 +1,5 @@
 <?php
-$EM_CONF[$_EXTKEY] = array(
+$EM_CONF[$_EXTKEY] = [
   'title' => 'Algolia Search Extension',
   'description' => 'Algolia Search Extension',
   'category' => 'Search Extension',
@@ -8,7 +8,7 @@ $EM_CONF[$_EXTKEY] = array(
   'shy' => '',
   'priority' => '',
   'module' => '',
-  'state' => 'stable',
+  'state' => 'beta',
   'internal' => '',
   'uploadfolder' => '0',
   'createDirs' => '',
@@ -16,31 +16,23 @@ $EM_CONF[$_EXTKEY] = array(
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'version' => '0.0.1',
-  'constraints' =>
-  array(
-    'depends' =>
-    array(
+  'constraints' => [
+    'depends' => [
       'typo3' => '8.7.0-8.99.99',
-    ),
-    'conflicts' =>
-    array(
-    ),
-    'suggests' =>
-    array(
-    ),
-  ),
-  'autoload' =>
-  array(
-    'psr-4' =>
-    array(
+    ],
+    'conflicts' => [
+    ],
+    'suggests' => [
+    ],
+  ],
+  'autoload' => [
+    'psr-4' => [
       'Mahu\\SearchAlgolia\\' => 'Classes',
-    ),
-  ),
-  'autoload-dev' =>
-  array(
-    'psr-4' =>
-    array(
+    ],
+  ],
+  'autoload-dev' => [
+    'psr-4' => [
       'Mahu\\SearchAlgolia\\Tests\\' => 'Tests',
-    ),
-  ),
-);
+    ],
+  ],
+];

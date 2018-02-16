@@ -3,7 +3,7 @@
 namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
 
 /*
- * Copyright (C) 2016  Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2018  Martin Hummer <ma.hummer@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class);
         $this->configuration = $objectManager->get(ConfigurationContainerInterface::class);
 
-        // Make instance of the TaskObserver which holds the current TaskId
+        // Make instance of the TaskObserver which holds the current TaskId if an action is performed on the index
         $this->taskObserver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Connection\Algolia\TaskObserver');
 
         // Create client to make requests and assert something.
@@ -77,7 +77,7 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
     public function tearDown()
     {
         // Make system clean again.
-        //$this->cleanUp();
+        $this->cleanUp();
     }
 
     protected function cleanUp()
