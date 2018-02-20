@@ -23,7 +23,6 @@ namespace Mahu\SearchAlgolia\Connection;
 
 use Codappix\SearchCore\Connection\SearchRequestInterface;
 use Codappix\SearchCore\Connection\SearchResultInterface;
-use Codappix\SearchCore\Domain\Search\QueryFactory;
 use TYPO3\CMS\Core\SingletonInterface as Singleton;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use Codappix\SearchCore\Connection\ConnectionInterface;
@@ -40,9 +39,9 @@ class Algolia implements Singleton, ConnectionInterface
     protected $connection;
 
     /**
-     * @var QueryFactory
+     * @var Algolia\IndexFactory
      */
-    protected $queryFactory;
+    protected $indexFactory;
 
     /**
      * @var \TYPO3\CMS\Core\Log\Logger
@@ -78,21 +77,20 @@ class Algolia implements Singleton, ConnectionInterface
 
     /**
      * @param Algolia\Connection $connection
-     * @param QueryFactory $queryFactory
+     * @param Algolia\IndexFactory $indexFactory
      */
     public function __construct(
         Algolia\Connection $connection,
-
-        QueryFactory $queryFactory
+        Algolia\IndexFactory $indexFactory
     ) {
         $this->connection = $connection;
-        $this->queryFactory = $queryFactory;
+        $this->indexFactory = $indexFactory;
         $this->taskObserver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Connection\Algolia\TaskObserver');
     }
 
     public function addDocument($documentType, array $document)
     {
-        $request = $this->connection->getIndex()->addObject($document, $document['uid']); //PHP Algolia Search Client
+        $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
 
         $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
     }
@@ -114,7 +112,7 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function updateDocument($documentType, array $document)
     {
-        return $this->connection->getIndex()->addObject($document, $document['uid']); //Same as addDocument()
+        //Same as addDocument()
     }
 
     /**
@@ -129,7 +127,7 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function deleteDocument($documentType, $identifier)
     {
-        $request = $this->connection->getIndex()->deleteObject($identifier); //PHP Algolia Search Client
+        $request = $this->getIndex($this->connection, $documentType)->deleteObject($identifier); //PHP Algolia Search Client
 
         $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
     }
@@ -156,5 +154,17 @@ class Algolia implements Singleton, ConnectionInterface
     public function deleteIndex($documentType)
     {
         // TODO: Implement deleteIndex() method.
+    }
+
+    /**
+     *
+     * Get the index
+     *
+     * @param Algolia\Connection $connection
+     * @param string $documentType tableName
+     */
+    public function getIndex($connection, $documentType)
+    {
+        return $this->indexFactory->getIndex($connection, $documentType);
     }
 }

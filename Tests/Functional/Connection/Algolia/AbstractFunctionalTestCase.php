@@ -38,12 +38,11 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
      */
     protected $client;
 
-    /**
-     * @var \AlgoliaSearch\Index
-     * */
-    protected $algoliaIndex;
-
     protected $configuration;
+
+    protected $index;
+
+    protected $indexName;
 
     /**
      * @var \Mahu\SearchAlgolia\TaskObserver
@@ -65,13 +64,6 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
             $this->configuration->get('connections.algolia.applicationID'),
             $this->configuration->get('connections.algolia.apiKey')
         );
-
-        $this->algoliaIndex = $this->client->initIndex(
-            $this->configuration->get('connections.algolia.indexName')
-        );
-
-        // Start with clean system for test.
-        $this->cleanUp();
     }
 
     public function tearDown()
@@ -82,6 +74,36 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
 
     protected function cleanUp()
     {
-        $this->client->deleteIndex($this->configuration->get('connections.algolia.indexName'));
+        $this->client->deleteIndex($this->indexName);
+    }
+
+    /**
+     * returns the Algolia Index based on the indexName which is specified in the typoscript configuration.
+     * If no indexName is specified in the configuration, then the tablename (documentType) will be used instead.
+     *
+     * @param $documentType tableName
+     */
+    public function initIndex($documentType)
+    {
+        $this->indexName = $this->getIndexNameFromConfiguration($documentType);
+
+        if ($this->indexName) {
+            $this->index = $this->client->initIndex($this->indexName);
+        } else {
+            $this->index = $this->client->initIndex($documentType);
+        }
+    }
+
+    protected function getIndexNameFromConfiguration($documentType)
+    {
+        try {
+            $config = $this->configuration->get('indexing.' . $documentType);
+
+            if (isset($config['indexName'])) {
+                return $config['indexName'];
+            }
+        } catch (InvalidArgumentException $e) {
+            return [];
+        }
     }
 }

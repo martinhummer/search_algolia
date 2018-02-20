@@ -38,9 +38,6 @@ class Connection implements Singleton
      */
     protected $algoliaClient;
 
-    /** @var \AlgoliaSearch\Index  */
-    protected $algoliaIndex;
-
     /**
      * @var ConfigurationContainerInterface
      */
@@ -63,10 +60,6 @@ class Connection implements Singleton
                 $configuration->get('connections.algolia.apiKey')
             );
         }
-
-        $this->algoliaIndex = $this->algoliaClient->initIndex(
-            $configuration->get('connections.algolia.indexName')
-        );
     }
 
     /**
@@ -77,15 +70,5 @@ class Connection implements Singleton
     public function getClient()
     {
         return $this->algoliaClient;
-    }
-
-    /**
-     * Get the concrete client for internal usage!
-     *
-     * @return \AlgoliaSearch\Index
-     */
-    public function getIndex()
-    {
-        return $this->algoliaIndex;
     }
 }

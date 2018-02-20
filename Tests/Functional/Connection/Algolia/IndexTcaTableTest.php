@@ -37,11 +37,13 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     *
+     * @group test
      * @test
      */
     public function indexSingleTtContent()
     {
+        $this->initIndex('tt_content');
+
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tt_content')
@@ -49,8 +51,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
 
-        $this->algoliaIndex->waitTask($taskId);
-        $response = $this->algoliaIndex->search('*');
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
 
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
         $this->assertArraySubset(
@@ -62,10 +64,13 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
+     * @group test
     * @test
     */
     public function updateSingleTtContent()
     {
+        $this->initIndex('tt_content');
+
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tt_content')
@@ -84,8 +89,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
 
-        $this->algoliaIndex->waitTask($taskId);
-        $response = $this->algoliaIndex->search('*');
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
 
         $this->assertArraySubset(
             [0 => ['header' => 'update the header new']],
@@ -96,18 +101,20 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group deleting
+    * @group test
     * @test
     */
     public function deleteSingleTtContent()
     {
+        $this->initIndex('tt_content');
+
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
             ->get(IndexerFactory::class)
             ->getIndexer('tt_content')
             ->indexDocument(6);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-        $this->algoliaIndex->waitTask($taskId); //wait until Angolia has finished the task
+        $this->index->waitTask($taskId); //wait until Angolia has finished the task
 
         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
         $tce->stripslashes_values = 0;
@@ -121,9 +128,9 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $tce->process_cmdmap();
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-        $this->algoliaIndex->waitTask($taskId); //wait until Angolia has finished the task
+        $this->index->waitTask($taskId); //wait until Angolia has finished the task
 
-        $response = $this->algoliaIndex->search('*');
+        $response = $this->index->search('*');
 
         $this->assertSame($response['nbHits'], 0, 'Not exactly 0 documents were indexed.');
     }
