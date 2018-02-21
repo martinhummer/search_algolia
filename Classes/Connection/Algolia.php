@@ -93,6 +93,8 @@ class Algolia implements Singleton, ConnectionInterface
         $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
 
         $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
+
+        $this->logger->info('Start indexing single record.', ['Table: ' . $documentType, 'UID: ' . $document['uid']]);
     }
 
     public function addDocuments($documentType, array $documents)
