@@ -37,7 +37,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group test
+     *
      * @test
      */
     public function indexSingleTtContent()
@@ -64,7 +64,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group test
+     *
     * @test
     */
     public function updateSingleTtContent()
@@ -101,7 +101,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group test
+    *
     * @test
     */
     public function deleteSingleTtContent()

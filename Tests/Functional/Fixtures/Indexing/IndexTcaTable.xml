@@ -99,4 +99,15 @@
         <colPos>0</colPos>
         <filelink_sorting>0</filelink_sorting>
     </tt_content>
+
+    <sys_file>
+        <uid>123</uid>
+        <pid>1</pid>
+        <tstamp>1480686370</tstamp>
+    </sys_file>
+    <sys_file>
+        <uid>234</uid>
+        <pid>1</pid>
+        <tstamp>1480686370</tstamp>
+    </sys_file>
 </dataset>
