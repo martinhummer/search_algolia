@@ -1,9 +1,6 @@
 <?php
-
-namespace Mahu\SearchAlgolia\Tests\Functional\Hooks\DataHandler;
-
 /*
- * Copyright (C) 2016  Daniel Siepmann <coding@daniel-siepmann.de>
+ * Copyright (C) 2018  Martin Hummer
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,18 +18,27 @@ namespace Mahu\SearchAlgolia\Tests\Functional\Hooks\DataHandler;
  * 02110-1301, USA.
  */
 
-class ProcessesAllowedTablesWithMultipleTablesConfiguredTest extends ProcessesAllowedTablesTest
-{
-    /**
-     * @var DataHandlerService|\PHPUnit_Framework_MockObject_MockObject|AccessibleObjectInterface
-     */
-    protected $subject;
+namespace Mahu\SearchAlgolia\DataProcessing;
 
-    protected function getTypoScriptFilesForFrontendRootPage()
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Codappix\SearchCore\DataProcessing\ProcessorInterface;
+
+/**
+ * Processes every record before it is sent to the Index
+ */
+class RelationProcessor implements ProcessorInterface
+{
+    protected $relationResolver;
+
+    public function __construct(
+    ) {
+        $this->relationResolver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Service\RelationResolver');
+    }
+
+    public function processRecord(array $record, array $configuration) : array
     {
-        return array_merge(
-            parent::getTypoScriptFilesForFrontendRootPage(),
-            ['EXT:search_algolia/Tests/Functional/Fixtures/Hooks/DataHandler/MultipleAllowedTables.ts']
-        );
+        $this->relationResolver->processRelations($configuration, $record);
+
+        return $record;
     }
 }

@@ -69,7 +69,7 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
     public function tearDown()
     {
         // Make system clean again.
-        //$this->cleanUp();
+        $this->cleanUp();
     }
 
     protected function cleanUp()

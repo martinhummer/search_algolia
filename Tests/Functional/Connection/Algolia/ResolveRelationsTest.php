@@ -21,6 +21,8 @@ namespace Mahu\SearchAlgolia\Tests\Functional\Connection\Algolia;
  * 02110-1301, USA.
  */
 
+use Codappix\SearchCore\Domain\Index\IndexerFactory;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Core\DataHandling\DataHandler as Typo3DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -35,53 +37,113 @@ class ResolveRelationsTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group test
+    *
     * @test
     */
+    /*
     public function dataHandlerRelationResolving()
     {
         $this->initIndex('tt_content');
 
-        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
-        $tce->stripslashes_values = 0;
-        $commandMap = [];
-        $dataMap = [
-            'tt_content' => [
-              'NEW58d5079c822627844' => [
-                'pid' => 1,
-                'header' => 'New New New',
-                'bodytext' => 'New New New',
-                'CType' => 'text',
-                'categories' => 1
-              ],
-            ],
-            'sys_category_record_mm' => [
-                'NEW58d506f3cd0c41.59344142' => [
-                    'uid_local' => 1,
-                  'uid_foreign' => 'NEW58d5079c822627844',
-                  'tablenames' => 'tt_content',
-                  'fieldname' => 'categories',
-                  'sorting' => 1,
-                  'sorting_foreign' => 1
-                ],
-            ],
-          ];
-        $tce->start($dataMap, []);
-        $tce->process_datamap();
+         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+         $tce->stripslashes_values = 0;
+         $commandMap = [];
+         $dataMap = [
+             'tt_content' => [
+               'NEW58d5079c822627844' => [
+                 'pid' => 1,
+                 'header' => 'New New New',
+                 'bodytext' => 'New New New',
+                 'CType' => 'text',
+                 'categories' => 1
+               ],
+             ],
+             'sys_category_record_mm' => [
+                 '1' => [
+                     'uid_local' => 1,
+                   'uid_foreign' => 'NEW58d5079c822627844',
+                   'tablenames' => 'tt_content',
+                   'fieldname' => 'categories',
+                   'sorting' => 1,
+                   'sorting_foreign' => 1
+                 ],
+             ],
+           ];
+         $tce->start($dataMap, []);
+         $tce->process_datamap();
 
+         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+         $this->index->waitTask($taskId);
+
+         $response = $this->index->search('*');
+
+         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+
+         $this->assertArraySubset(
+                     [0 => [
+                         'header' => 'New New New',
+                         'categories' => ['Category 1']
+                         ]
+                     ],
+                     $response['hits'],
+                     false,
+                     'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
+                 );
+
+    }
+    */
+
+    /**
+     * @group event
+     * @test
+     */
+    public function relationsAreResolved()
+    {
+        $this->initIndex('tt_content');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tt_content')
+            ->indexDocument(10);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
         $response = $this->index->search('*');
 
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
-
         $this->assertArraySubset(
-                    [0 => [
-                        'header' => 'New New New',
-                        'categories' => ['Category 1']
-                        ]
-                    ],
+            [0 => ['header' => 'GERMAN Content', 'categories' => ['Category 1 DEUTSCH']]],
+            $response['hits'],
+            false,
+            'tt_content Record was not indexed.'
+        );
+    }
+
+    /**
+    * @group event
+    * @test
+    */
+    public function translatedRelationsAreResolved()
+    {
+        $this->initIndex('tt_content');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+                    ->get(IndexerFactory::class)
+                    ->getIndexer('tt_content')
+                    ->indexDocument(11);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+                    [0 => ['header' => 'ENGLISH Content', 'categories' => ['Category 1 ENGLISH']]],
                     $response['hits'],
                     false,
-                    'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
+                    'tt_content Record was not indexed.'
                 );
     }
 }
