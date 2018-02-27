@@ -24,13 +24,13 @@ class RelationResolver
         $this->tableName = $config['tableName'];
 
         foreach (array_keys($record) as $column) {
-            $this->getRelations($column, $record, $config['relationLableField'][$column]);
+            $this->getRelations($column, $record, $config['relationLabelField'][$column]);
         }
 
         //var_dump($record);
     }
 
-    protected function getRelations($column, &$record, $relationLableField = 'title')
+    protected function getRelations($column, &$record, $relationLabelField = 'title')
     {
         try {
             $columnConfig = $this->getColumnConfig($column);
@@ -61,7 +61,7 @@ class RelationResolver
 
             if ($relationRecord) {
                 $overlayRecord = $this->getRecordOverlay($columnConfig['foreign_table'], $relationRecord, $record['sys_language_uid']);
-                $relations[] = $overlayRecord[$relationLableField];
+                $relations[] = $overlayRecord[$relationLabelField];
             }
         }
 
