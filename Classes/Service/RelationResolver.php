@@ -9,7 +9,22 @@ use Codappix\SearchCore\Domain\Index\TcaIndexer\InvalidArgumentException;
 
 class RelationResolver
 {
+    /**
+     * @var \TYPO3\CMS\Core\Log\Logger
+     */
+    protected $logger;
+
     protected $tableName;
+
+    /**
+     * Inject log manager to get concrete logger from it.
+     *
+     * @param \TYPO3\CMS\Core\Log\LogManager $logManager
+     */
+    public function injectLogger(\TYPO3\CMS\Core\Log\LogManager $logManager)
+    {
+        $this->logger = $logManager->getLogger(__CLASS__);
+    }
 
     public function __construct()
     {
@@ -22,14 +37,13 @@ class RelationResolver
 
         foreach (array_keys($config['relationLabelField']) as $column) {
             try {
-
                 $columnConfig = $this->getColumnConfig($column);
                 if ($this->isRelation($columnConfig)) {
                     $this->getRelations($column, $record, $config['relationLabelField'][$column], $columnConfig);
                 }
 
             } catch (InvalidArgumentException $e) {
-
+                $this->logger->warning('Could not get TCA config for relation field', ['Field:' . $column, 'Table: ' . $this->tableName, 'UID: ' . $record['uid']]);
             }
 
         }
