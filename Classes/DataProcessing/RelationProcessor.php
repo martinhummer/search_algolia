@@ -30,12 +30,17 @@ class RelationProcessor implements ProcessorInterface
 {
     protected $relationResolver;
 
-    public function __construct(
-    ) {
+    public function __construct()
+    {
         $this->relationResolver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Service\RelationResolver');
     }
 
-    public function processRecord(array $record, array $configuration) : array
+
+    /**
+     * Processes the given data.
+     * Also retrieves the configuration for this processor instance.
+     */
+    public function processData(array $record, array $configuration) : array
     {
         $this->relationResolver->processRelations($configuration, $record);
 

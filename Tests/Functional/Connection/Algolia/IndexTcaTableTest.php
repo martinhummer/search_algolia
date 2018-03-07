@@ -64,6 +64,35 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
+     * @group bla
+     * @test
+     */
+    /*public function indexSinglePageContent()
+    {
+        $this->initIndex('pages');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('pages')
+            ->indexDocument(1);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
+
+        var_dump($response['hits'][0]);
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+            [0 => ['header' => 'indexed content element']],
+            $response['hits'],
+            false,
+            'tt_content Record was not indexed.'
+        );
+    }*/
+
+    /**
      * @group test
     * @test
     */

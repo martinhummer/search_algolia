@@ -45,7 +45,7 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
     protected $indexName;
 
     /**
-     * @var \Mahu\SearchAlgolia\TaskObserver
+     * @var \Mahu\SearchAlgolia\Connection\Algolia\TaskObserver
      * */
     protected $taskObserver;
 
