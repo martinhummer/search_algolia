@@ -70,6 +70,6 @@ abstract class AbstractFunctionalTestCase extends CoreTestCase
      */
     protected function getTypoScriptFilesForFrontendRootPage()
     {
-        return ['EXT:search_algolia/Tests/Functional/Fixtures/BasicSetup.ts'];
+        return ['EXT:search_algolia/Tests/Functional/Fixtures/AlgoliaCredentials.ts', 'EXT:search_algolia/Tests/Functional/Fixtures/BasicSetup.ts'];
     }
 }

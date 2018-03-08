@@ -1,10 +1,10 @@
 plugin {
-    tx_searchalgolia {
+    tx_searchcore {
         settings {
             connections {
                 algolia {
-                    applicationID = yourAppID
-                    apiKey = yourApiKey
+                    applicationID = your_application_id
+                    apiKey = your_api_key
                 }
             }
         }
