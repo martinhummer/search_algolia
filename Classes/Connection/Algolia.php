@@ -28,8 +28,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use Codappix\SearchCore\Connection\ConnectionInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AlgoliaSearch\AlgoliaConnectionException;
-use TYPO3\CMS\Core\Messaging\FlashMessageRendererResolver;
-use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use Codappix\SearchCore\Configuration\InvalidArgumentException;
 
 /**
  * Outer wrapper to algolia.
@@ -60,6 +59,8 @@ class Algolia implements Singleton, ConnectionInterface
 
     protected $taskObserver;
 
+    protected $configuration;
+
     /**
      * Inject log manager to get concrete logger from it.
      *
@@ -85,10 +86,12 @@ class Algolia implements Singleton, ConnectionInterface
     public function __construct(
         Algolia\Connection $connection,
         Algolia\IndexFactory $indexFactory
-    ) {
+    )
+    {
         $this->connection = $connection;
         $this->indexFactory = $indexFactory;
         $this->taskObserver = GeneralUtility::makeInstance('Mahu\SearchAlgolia\Connection\Algolia\TaskObserver');
+        $this->configuration = $connection->getConfiguration();
     }
 
     public function addDocument($documentType, array $document)
@@ -98,8 +101,9 @@ class Algolia implements Singleton, ConnectionInterface
         try {
             $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
             $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
+            $this->renderFlashMessage('Algolia Search Indexer', 'Record was successfully indexed, TaskID: ' .$request['taskID'] , \TYPO3\CMS\Core\Messaging\FlashMessage::OK);
         } catch (AlgoliaConnectionException $e) {
-            $this->renderFlashMessage('Algolia Searcch Indexer', 'Record could not be indexed', \TYPO3\CMS\Core\Messaging\FlashMessage::WARNING);
+            $this->renderFlashMessage('Algolia Search Indexer', 'Record could not be indexed', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
             $this->logger->error('Error while indexing Record', ['Table: ' . $documentType, 'UID: ' . $document['uid'], 'ErrorMessage: ' . $e->getMessage()]);
         }
 
@@ -107,7 +111,7 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocuments($documentType, array $documents)
     {
-        foreach($documents as $document) {
+        foreach ($documents as $document) {
             $this->addDocument($documentType, $document);
         }
 
@@ -181,15 +185,22 @@ class Algolia implements Singleton, ConnectionInterface
         return $this->indexFactory->getIndex($connection, $documentType);
     }
 
-    protected function renderFlashMessage($title, $message, $severity) {
-        $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Messaging\FlashMessage::class,
-            $message,
-            $title,
-            $severity, // [optional] the severity defaults to \TYPO3\CMS\Core\Messaging\FlashMessage::OK
-            true // [optional] whether the message should be stored in the session or only in the \TYPO3\CMS\Core\Messaging\FlashMessageQueue object (default is false)
-        );
-        $flashMessageService = $this->objectManager->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class);
-        $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
-        $messageQueue->addMessage($message);
+    protected function renderFlashMessage($title, $message, $severity)
+    {
+        try {
+            if ($this->configuration->get('debug')) {
+                $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Messaging\FlashMessage::class,
+                    $message,
+                    $title,
+                    $severity, // [optional] the severity defaults to \TYPO3\CMS\Core\Messaging\FlashMessage::OK
+                    true // [optional] whether the message should be stored in the session or only in the \TYPO3\CMS\Core\Messaging\FlashMessageQueue object (default is false)
+                );
+                $flashMessageService = $this->objectManager->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class);
+                $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
+                $messageQueue->addMessage($message);
+            }
+        } catch (InvalidArgumentException $e) {
+            //do nothing, because we are in production Application Context
+        }
     }
 }

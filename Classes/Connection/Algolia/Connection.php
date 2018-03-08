@@ -71,4 +71,13 @@ class Connection implements Singleton
     {
         return $this->algoliaClient;
     }
+
+    /**
+     * Returns search_core extension configuration
+     *
+     * @return ConfigurationContainerInterface
+     */
+    public function getConfiguration() {
+        return $this->configuration;
+    }
 }

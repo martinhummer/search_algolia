@@ -39,6 +39,8 @@ plugin {
                         4 {
                             fieldName = images
                         }
+
+
                     }
 
                     additionalWhereClause(

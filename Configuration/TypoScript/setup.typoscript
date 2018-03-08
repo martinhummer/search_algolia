@@ -10,3 +10,13 @@ plugin {
         }
     }
 }
+
+[applicationContext = Development]
+    plugin {
+        tx_searchcore {
+            settings {
+                debug = 1
+            }
+        }
+    }
+[end]
