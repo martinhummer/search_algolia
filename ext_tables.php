@@ -17,7 +17,7 @@ if (TYPO3_MODE === 'BE') {
         'm1',
         '',
         [
-            'Module' => 'list'
+            'Module' => 'list, triggerReIndexing'
         ],
         [
             'access' => 'user,group',

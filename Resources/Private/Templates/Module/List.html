@@ -15,24 +15,56 @@
             </f:else>
         </f:if>
 
-        <f:if condition="{indexList}">
+        <f:flashMessages />
+
+
+
+
+        <f:if condition="{localIndexList}">
             <div class="panel panel-default">
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>List of Algolia Indexes</th>
+                        <th>Algolia Indexes from Typoscript config</th>
+                        <th>Table</th>
+                        <th>Action</th>
+                    </tr>
+                    <thead>
+                    <tbody>
+
+                    <f:for each="{localIndexList}" as="localIndex" key="tableName">
+
+                        <tr>
+                            <th>{localIndex.indexName}</th>
+                            <th>{tableName}</th>
+                            <th>
+                                <f:link.action class="btn btn-danger" action="triggerReIndexing" arguments="{'indexName': localIndex.indexName, 'tableName': tableName}">Reindex</f:link.action>
+                            </th>
+                        </tr>
+                    </f:for>
+                    </tbody>
+                </table>
+            </div>
+        </f:if>
+
+        <f:if condition="{remoteIndexList}">
+            <div class="panel panel-default">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>All Algolia Indexes on remote Server</th>
                         <th>Entries</th>
                         <th>Last Updated</th>
                     </tr>
                     <thead>
                     <tbody>
 
-                    <f:for each="{indexList}" as="index">
+                    <f:for each="{remoteIndexList}" as="remoteIndex">
 
                         <tr>
-                            <th>{index.name}</th>
-                            <th>{index.entries}</th>
-                            <th>{index.updatedAt}</th>
+                            <th>{remoteIndex.name}</th>
+                            <th>{remoteIndex.entries}</th>
+                            <th>{remoteIndex.updatedAt}</th>
                         </tr>
                     </f:for>
                     </tbody>
