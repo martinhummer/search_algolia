@@ -27,6 +27,9 @@ use TYPO3\CMS\Core\SingletonInterface as Singleton;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use Codappix\SearchCore\Connection\ConnectionInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use AlgoliaSearch\AlgoliaConnectionException;
+use TYPO3\CMS\Core\Messaging\FlashMessageRendererResolver;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
 
 /**
  * Outer wrapper to algolia.
@@ -90,11 +93,16 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocument($documentType, array $document)
     {
-        $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
-
-        $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
-
         $this->logger->info('Start indexing single record.', ['Table: ' . $documentType, 'UID: ' . $document['uid']]);
+
+        try {
+            $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
+            $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
+        } catch (AlgoliaConnectionException $e) {
+            $this->renderFlashMessage('Algolia Searcch Indexer', 'Record could not be indexed', \TYPO3\CMS\Core\Messaging\FlashMessage::WARNING);
+            $this->logger->error('Error while indexing Record', ['Table: ' . $documentType, 'UID: ' . $document['uid'], 'ErrorMessage: ' . $e->getMessage()]);
+        }
+
     }
 
     public function addDocuments($documentType, array $documents)
@@ -168,5 +176,17 @@ class Algolia implements Singleton, ConnectionInterface
     public function getIndex($connection, $documentType)
     {
         return $this->indexFactory->getIndex($connection, $documentType);
+    }
+
+    protected function renderFlashMessage($title, $message, $severity) {
+        $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Messaging\FlashMessage::class,
+            $message,
+            $title,
+            $severity, // [optional] the severity defaults to \TYPO3\CMS\Core\Messaging\FlashMessage::OK
+            true // [optional] whether the message should be stored in the session or only in the \TYPO3\CMS\Core\Messaging\FlashMessageQueue object (default is false)
+        );
+        $flashMessageService = $this->objectManager->get(\TYPO3\CMS\Core\Messaging\FlashMessageService::class);
+        $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
+        $messageQueue->addMessage($message);
     }
 }

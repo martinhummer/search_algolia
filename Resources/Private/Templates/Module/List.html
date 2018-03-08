@@ -1,6 +1,44 @@
+<f:be.container>
 
+    <div class="module-body" id="container-content">
 
-	<h1><f:translate key="BackendListTitle" /></h1>
+        <h1>
+            <f:translate key="BackendListTitle"/>
+        </h1>
 
-	<f:debug>Backend</f:debug>
+        <f:if condition="{algoliaException}">
+            <f:then>
+                <f:be.infobox title="Algolia Exception" state="2">{algoliaException}</f:be.infobox>
+            </f:then>
+            <f:else>
+                <f:be.infobox title="Algolia Status" state="0">Algolia Connection is up and running.</f:be.infobox>
+            </f:else>
+        </f:if>
 
+        <f:if condition="{indexList}">
+            <div class="panel panel-default">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>List of Algolia Indexes</th>
+                        <th>Entries</th>
+                        <th>Last Updated</th>
+                    </tr>
+                    <thead>
+                    <tbody>
+
+                    <f:for each="{indexList}" as="index">
+
+                        <tr>
+                            <th>{index.name}</th>
+                            <th>{index.entries}</th>
+                            <th>{index.updatedAt}</th>
+                        </tr>
+                    </f:for>
+                    </tbody>
+                </table>
+            </div>
+        </f:if>
+
+    </div>
+</f:be.container>

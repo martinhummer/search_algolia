@@ -1,8 +1,7 @@
 <?php
 namespace Mahu\SearchAlgolia\Controller;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use AlgoliaSearch\AlgoliaConnectionException;
 
 /**
@@ -23,16 +22,17 @@ class ModuleController extends \TYPO3\CMS\Belog\Controller\AbstractController
      */
     protected $settings = array();
 
+    protected $client;
+
 
     /**
      *
      */
-    public function initializeAction() {
+    public function initializeAction()
+    {
         $this->configManager = GeneralUtility::makeInstance(\Codappix\SearchCore\Configuration\ConfigurationContainer::class);
         $this->configManager->injectConfigurationManager($this->configurationManager);
-
     }
-
 
 
     /**
@@ -42,34 +42,27 @@ class ModuleController extends \TYPO3\CMS\Belog\Controller\AbstractController
      */
     public function listAction()
     {
-
-
-        try{
+        try {
             $connection = GeneralUtility::makeInstance(\Mahu\SearchAlgolia\Connection\Algolia\Connection::class, $this->configManager);
-            $connection->getClient()->listIndexes();
+            $this->client = $connection->getClient();
+            $indexList = $this->getIndexList();
+
         } catch (AlgoliaConnectionException $e) {
-            debug($e);
+            $this->view->assignMultiple(['algoliaException' => $e->getMessage()]);
         }
 
 
         $this->view->assignMultiple(
             [
-
+                'indexList' => $indexList
             ]
         );
     }
 
-    protected function getConnectionConfiguration(){
-        if (isset($this->settings['connections']['algolia']['applicationID']) && $this->settings['connections']['algolia']['apiKey']) {
-
-        } else {
-            throw new InvalidArgumentException(
-                'The configuration for Algolia does not exist.',
-                InvalidArgumentException::OPTION_DOES_NOT_EXIST
-            );
-        }
+    protected function getIndexList()
+    {
+        return $indexList = $this->client->listIndexes()['items'];
     }
-
 
 
 }
