@@ -37,7 +37,34 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group test
+     * @group tt_content
+     * @test
+     */
+    public function indexMultipleTtContent()
+    {
+        $this->initIndex('tt_content');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('tt_content')
+            ->indexAllDocuments();
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 2, 'Not exactly 2 documents were indexed.');
+        $this->assertArraySubset(
+            [0 => ['header' => 'indexed content element']],
+            $response['hits'],
+            false,
+            'tt_content Record was not indexed.'
+        );
+    }
+
+    /**
+     * @group tt_content
      * @test
      */
     public function indexSingleTtContent()
@@ -93,7 +120,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }*/
 
     /**
-     * @group test
+     * @group tt_content
     * @test
     */
     public function updateSingleTtContent()
@@ -130,7 +157,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group test
+    * @group tt_content
     * @test
     */
     public function deleteSingleTtContent()
