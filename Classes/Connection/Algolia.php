@@ -66,7 +66,7 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @param \TYPO3\CMS\Core\Log\LogManager $logManager
      */
-    public function injectLogger(\TYPO3\CMS\Core\Log\LogManager $logManager)
+    public function injectLogger( \TYPO3\CMS\Core\Log\LogManager $logManager )
     {
         $this->logger = $logManager->getLogger(__CLASS__);
     }
@@ -74,7 +74,7 @@ class Algolia implements Singleton, ConnectionInterface
     /**
      * @param ObjectManagerInterface $objectManager
      */
-    public function injectObjectManager(ObjectManagerInterface $objectManager)
+    public function injectObjectManager( ObjectManagerInterface $objectManager )
     {
         $this->objectManager = $objectManager;
     }
@@ -94,14 +94,18 @@ class Algolia implements Singleton, ConnectionInterface
         $this->configuration = $connection->getConfiguration();
     }
 
-    public function addDocument($documentType, array $document)
+    /**
+     * @param string $documentType
+     * @param array $document
+     */
+    public function addDocument( string $documentType, array $document )
     {
         $this->logger->info('Start indexing single record.', ['Table: ' . $documentType, 'UID: ' . $document['uid']]);
 
         try {
             $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
             $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
-            $this->renderFlashMessage('Algolia Search Indexer', 'Record was successfully indexed, TaskID: ' .$request['taskID'] , \TYPO3\CMS\Core\Messaging\FlashMessage::OK);
+            $this->renderFlashMessage('Algolia Search Indexer', 'Record was successfully indexed, TaskID: ' . $request['taskID'] . ', Table: ' . $documentType, \TYPO3\CMS\Core\Messaging\FlashMessage::OK);
         } catch (AlgoliaConnectionException $e) {
             $this->renderFlashMessage('Algolia Search Indexer', 'Record could not be indexed', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
             $this->logger->error('Error while indexing Record', ['Table: ' . $documentType, 'UID: ' . $document['uid'], 'ErrorMessage: ' . $e->getMessage()]);
@@ -109,7 +113,7 @@ class Algolia implements Singleton, ConnectionInterface
 
     }
 
-    public function addDocuments($documentType, array $documents)
+    public function addDocuments(string $documentType, array $documents)
     {
         foreach ($documents as $document) {
             $this->addDocument($documentType, $document);
@@ -127,7 +131,7 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @return void
      */
-    public function updateDocument($documentType, array $document)
+    public function updateDocument(string $documentType, array $document)
     {
         //Same as addDocument()
     }
@@ -142,7 +146,7 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @return void
      */
-    public function deleteDocument($documentType, $identifier)
+    public function deleteDocument(string $documentType, string $identifier)
     {
         $request = $this->getIndex($this->connection, $documentType)->deleteObject($identifier); //PHP Algolia Search Client
 
@@ -156,7 +160,7 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @return SearchResultInterface
      */
-    public function search(SearchRequestInterface $searchRequest)
+    public function search(SearchRequestInterface $searchRequest) : SearchResultInterface
     {
         // TODO: Implement search() method.
     }
@@ -168,7 +172,7 @@ class Algolia implements Singleton, ConnectionInterface
      *
      * @return void
      */
-    public function deleteIndex($documentType)
+    public function deleteIndex(string $documentType)
     {
         // TODO: Implement deleteIndex() method.
     }
@@ -180,12 +184,12 @@ class Algolia implements Singleton, ConnectionInterface
      * @param Algolia\Connection $connection
      * @param string $documentType tableName
      */
-    public function getIndex($connection, $documentType)
+    public function getIndex( $connection, $documentType )
     {
         return $this->indexFactory->getIndex($connection, $documentType);
     }
 
-    protected function renderFlashMessage($title, $message, $severity)
+    protected function renderFlashMessage( $title, $message, $severity )
     {
         try {
             if ($this->configuration->get('debug')) {
