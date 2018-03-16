@@ -157,7 +157,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group tt_content
+    * @group delete
     * @test
     */
     public function deleteSingleTtContent()
@@ -172,6 +172,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
         $this->index->waitTask($taskId); //wait until Angolia has finished the task
 
+
         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
         $tce->stripslashes_values = 0;
         $tce->start([], [
@@ -184,6 +185,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $tce->process_cmdmap();
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
         $this->index->waitTask($taskId); //wait until Angolia has finished the task
 
         $response = $this->index->search('*');

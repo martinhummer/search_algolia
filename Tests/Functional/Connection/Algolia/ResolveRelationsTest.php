@@ -37,61 +37,102 @@ class ResolveRelationsTest extends AbstractFunctionalTestCase
     }
 
     /**
-    *
-    * @test
-    */
-    /*
+     * @group datahandler
+     * @test
+     */
     public function dataHandlerRelationResolving()
     {
         $this->initIndex('tt_content');
 
-         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
-         $tce->stripslashes_values = 0;
-         $commandMap = [];
-         $dataMap = [
-             'tt_content' => [
-               'NEW58d5079c822627844' => [
-                 'pid' => 1,
-                 'header' => 'New New New',
-                 'bodytext' => 'New New New',
-                 'CType' => 'text',
-                 'categories' => 1
-               ],
-             ],
-             'sys_category_record_mm' => [
-                 '1' => [
-                     'uid_local' => 1,
-                   'uid_foreign' => 'NEW58d5079c822627844',
-                   'tablenames' => 'tt_content',
-                   'fieldname' => 'categories',
-                   'sorting' => 1,
-                   'sorting_foreign' => 1
-                 ],
-             ],
-           ];
-         $tce->start($dataMap, []);
-         $tce->process_datamap();
+        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+        $tce->stripslashes_values = 0;
+        $commandMap = [];
+        $dataMap = [
+            'tt_content' => [
+                'NEW58d5079c822627844' => [
+                    'pid' => 1,
+                    'header' => 'New New New',
+                    'bodytext' => 'New New New',
+                    'CType' => 'text',
+                    'categories' => [1]
+                ],
+            ],
+        ];
+        $tce->start($dataMap, []);
+        $tce->process_datamap();
 
-         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-         $this->index->waitTask($taskId);
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        $this->index->waitTask($taskId);
 
-         $response = $this->index->search('*');
+        $response = $this->index->search('*');
 
-         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
 
-         $this->assertArraySubset(
-                     [0 => [
-                         'header' => 'New New New',
-                         'categories' => ['Category 1']
-                         ]
-                     ],
-                     $response['hits'],
-                     false,
-                     'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
-                 );
+        $this->assertArraySubset(
+            [0 => [
+                'header' => 'New New New',
+                'categories' => ['Category 1 DEUTSCH']
+            ]
+            ],
+            $response['hits'],
+            false,
+            'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
+        );
 
     }
-    */
+
+    /**
+     * @group datahandler
+     * @test
+     */
+    public function dataHandlerWithNewRelationResolving()
+    {
+        $this->initIndex('tt_content');
+
+        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+        $tce->stripslashes_values = 0;
+        $commandMap = [];
+        $dataMap = [
+            'tt_content' => [
+                'NEW58d5079c822627844' => [
+                    'pid' => 1,
+                    'header' => 'New New New',
+                    'bodytext' => 'New New New',
+                    'CType' => 'text',
+                    'categories' => ['NEW9823be87']
+                ],
+            ],
+            'sys_category' => [
+                'NEW9823be87' => [
+                    'title' => 'New category',
+                    'pid' => 1,
+                ],
+            ],
+        ];
+
+        $tce->start($dataMap, []);
+        $tce->process_datamap();
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        $this->index->waitTask($taskId);
+
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+
+        $this->assertArraySubset(
+            [0 => [
+                'header' => 'New New New',
+                'categories' => ['New category']
+            ]
+            ],
+            $response['hits'],
+            false,
+            'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
+        );
+
+    }
+
 
     /**
      * @group event
@@ -121,17 +162,17 @@ class ResolveRelationsTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group event
-    * @test
-    */
+     * @group event
+     * @test
+     */
     public function translatedRelationsAreResolved()
     {
         $this->initIndex('tt_content');
 
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
-                    ->get(IndexerFactory::class)
-                    ->getIndexer('tt_content')
-                    ->indexDocument(11);
+            ->get(IndexerFactory::class)
+            ->getIndexer('tt_content')
+            ->indexDocument(11);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
 
@@ -140,10 +181,10 @@ class ResolveRelationsTest extends AbstractFunctionalTestCase
 
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
         $this->assertArraySubset(
-                    [0 => ['header' => 'ENGLISH Content', 'categories' => ['Category 1 ENGLISH']]],
-                    $response['hits'],
-                    false,
-                    'tt_content Record was not indexed.'
-                );
+            [0 => ['header' => 'ENGLISH Content', 'categories' => ['Category 1 ENGLISH']]],
+            $response['hits'],
+            false,
+            'tt_content Record was not indexed.'
+        );
     }
 }

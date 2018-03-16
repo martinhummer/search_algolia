@@ -148,9 +148,14 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function deleteDocument(string $documentType, string $identifier)
     {
-        $request = $this->getIndex($this->connection, $documentType)->deleteObject($identifier); //PHP Algolia Search Client
+        try {
+            $request = $this->getIndex($this->connection, $documentType)->deleteObject($identifier); //PHP Algolia Search Client
+            $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
+        }  catch (AlgoliaConnectionException $e) {
+            $this->renderFlashMessage('Algolia Search Indexer', 'Record could not be deleted', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
+            $this->logger->error('Error while deleting Record', ['Table: ' . $documentType, 'UID: ' . $identifier, 'ErrorMessage: ' . $e->getMessage()]);
+        }
 
-        $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
     }
 
     /**

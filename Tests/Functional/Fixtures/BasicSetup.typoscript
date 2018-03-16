@@ -31,7 +31,7 @@ plugin {
                             _table = tt_content
                             _dataProcessor = TYPO3\CMS\Frontend\DataProcessing\FilesProcessor
 
-                            references.fieldName = media
+                            references.fieldName = image
                             as = images
                         }
 
@@ -51,13 +51,11 @@ plugin {
 
                 }
 
-                pages {
-                    indexName = pages_test
-                    indexer = Codappix\SearchCore\Domain\Index\TcaIndexer\PagesIndexer
-                    abstractFields = abstract, description, bodytext
-
-
-                }
+                #pages {
+                    #indexName = pages_test
+                    #indexer = Codappix\SearchCore\Domain\Index\TcaIndexer\PagesIndexer
+                    #abstractFields = abstract, description, bodytext
+                #}
             }
 
             searching {

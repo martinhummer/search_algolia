@@ -65,5 +65,57 @@ class ResolveFalTest extends AbstractFunctionalTestCase
         );
     }
 
+    /**
+     * @group datahandler
+     * @test
+     */
+    public function dataHandlerWithNewRelationResolving()
+    {
+        $this->initIndex('tt_content');
+
+        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+        $tce->stripslashes_values = 0;
+        $commandMap = [];
+        $dataMap = [
+            'tt_content' => [
+                'NEW58d5079c822627844' => [
+                    'pid' => 1,
+                    'header' => 'New New New',
+                    'bodytext' => 'New New New',
+                    'CType' => 'textpic',
+                    'image' => 'NEW58d506f3cd0c41.59344142'
+                ],
+            ],
+            'sys_file_reference' => [
+                'NEW58d506f3cd0c41.59344142' => [
+                    'pid' => 1,
+                    'uid_local' => 'sys_file_1'
+                ],
+            ],
+        ];
+
+        $tce->start($dataMap, []);
+        $tce->process_datamap();
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        $this->index->waitTask($taskId);
+
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+
+        $this->assertArraySubset(
+            [0 => [
+                'header' => 'New New New',
+                'images' => ['fileadmin/user_upload/typo3_image2.jpg']
+            ]
+            ],
+            $response['hits'],
+            false,
+            'tx_mdms_domain_model_collection_item Record was not indexed with Relations.'
+        );
+
+    }
+
 
 }
