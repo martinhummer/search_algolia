@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use AlgoliaSearch\AlgoliaConnectionException;
 use Codappix\SearchCore\Domain\Index\IndexerFactory;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use Mahu\SearchAlgolia\Service\Log;
 
 /**
  * Class ModuleController for backend modules
@@ -29,6 +30,8 @@ class ModuleController extends \TYPO3\CMS\Belog\Controller\AbstractController
      */
     protected $client;
 
+    protected $logService;
+
 
     /**
      * Initialize configurationManager, which holds all settings of search_core Typoscript config.
@@ -50,14 +53,20 @@ class ModuleController extends \TYPO3\CMS\Belog\Controller\AbstractController
             $this->client = $connection->getClient();
             $remoteIndexList = $this->getRemoteIndexList();
             $localIndexList = $this->getLocalIndexList();
+
+            $this->logService = GeneralUtility::makeInstance(Log::class);
+            $logContent = $this->logService->getLogContent();
         } catch (AlgoliaConnectionException $e) {
             $this->view->assignMultiple(['algoliaException' => $e->getMessage()]);
+        } catch (\RuntimeException $e) {
+            $this->view->assignMultiple(['logException' => $e->getMessage()]);
         }
 
         $this->view->assignMultiple(
             [
                 'remoteIndexList' => $remoteIndexList,
-                'localIndexList' => $localIndexList
+                'localIndexList' => $localIndexList,
+                'logContent' => $logContent
             ]
         );
     }
