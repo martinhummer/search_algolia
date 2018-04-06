@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2013-09-19T09:11:39Z"
+          product-name="search_algolia">
+        <header/>
+        <body>
+            <trans-unit id="extMgm.adminApiKey">
+                <source>Algolia ADMIN Api Key</source>
+            </trans-unit>
+
+            <trans-unit id="extMgm.readOnlyApiKey">
+                <source>Algolia SEARCH ONLY Api Key</source>
+            </trans-unit>
+
+            <trans-unit id="extMgm.appId">
+                <source>Algolia APP ID</source>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

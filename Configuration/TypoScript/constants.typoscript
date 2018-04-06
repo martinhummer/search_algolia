@@ -1,12 +1,1 @@
-plugin {
-    tx_searchalgolia {
-        settings {
-            connections {
-                algolia {
-                    applicationID = yourAppID
-                    apiKey = yourApiKey
-                }
-            }
-        }
-    }
-}
+

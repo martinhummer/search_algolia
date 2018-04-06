@@ -7,6 +7,22 @@ call_user_func(
                 'Codappix\SearchCore\Connection\ConnectionInterface',
                 'Mahu\SearchAlgolia\Connection\Algolia'
             );
+
+        $settings = (array)unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['search_algolia']);
+
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptConstants('plugin {
+            tx_searchalgolia {
+                settings {
+                    connections {
+                        algolia {
+                            applicationID = ' . $settings['appId'] .'
+                            apiKey = ' . $settings['adminApiKey'] .'
+                        }
+                    }
+                }
+            }
+        }'
+        );
     },
     $_EXTKEY
 );

@@ -1,0 +1,13 @@
+#
+# Extension Configuration template
+#
+
+
+# cat=general/enable/1; type=string; label=LLL:EXT:mdms/Resources/Private/Language/backend.xlf:extMgm.adminApiKey
+adminApiKey =
+
+# cat=general/enable/1; type=string; label=LLL:EXT:mdms/Resources/Private/Language/backend.xlf:extMgm.readOnlyApiKey
+readOnlyApiKey =
+
+# cat=general/enable/1; type=string; label=LLL:EXT:mdms/Resources/Private/Language/backend.xlf:extMgm.appId
+appId =
