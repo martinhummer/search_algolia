@@ -37,12 +37,58 @@ class RelationResolverTest extends AbstractUnitTestCase
     }
 
     /**
+     *
+     * @test
+     */
+    public function renderTypeInputDateTimeIsHandled()
+    {
+        $originalRecord = [
+            'starttime' => 1523010960
+        ];
+        $record = $originalRecord;
+        $GLOBALS['TCA'] = [
+            'tt_content' => [
+                'columns' => [
+                    'starttime' => [
+                        'exclude' => true,
+                        'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+                        'config' => [
+                            'type' => 'input',
+                            'renderType' => 'inputDateTime',
+                            'eval' => 'datetime,int',
+                            'default' => 0
+                        ],
+                        'l10n_mode' => 'exclude',
+                        'l10n_display' => 'defaultAsReadonly'
+                    ],
+                ],
+            ],
+        ];
+        $tableServiceMock = $this->getMockBuilder(TcaTableServiceInterface::class)->getMock();
+        $tableServiceMock->expects($this->any())
+            ->method('getTableName')
+            ->willReturn('tt_content');
+        $tableServiceMock->expects($this->any())
+            ->method('getColumnConfig')
+            ->willReturn($GLOBALS['TCA']['tt_content']['columns']['starttime']['config']);
+
+        $this->subject->resolveRelationsForRecord($tableServiceMock, $record);
+
+        $this->assertSame(
+            $originalRecord,
+            $record,
+            'starttime'
+        );
+    }
+
+    /**
+     * @group lang
      * @test
      */
     public function sysLanguageUidZeroIsKept()
     {
         $originalRecord = [
-            'sys_language_uid' => '0',
+            'sys_language_uid' => 0,
         ];
         $record = $originalRecord;
         $GLOBALS['TCA'] = [
@@ -58,16 +104,18 @@ class RelationResolverTest extends AbstractUnitTestCase
                                     'flags-multiple',
                                 ],
                             ],
-                            'renderType = selectSingle',
-                            'special = languages',
-                            'type = select',
-                            'exclude = 1',
-                            'label = LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.language',
+                            'renderType' => 'selectSingle',
+                            'special' => 'languages',
+                            'type' => 'select',
+                            'exclude' => 1,
+                            'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.language',
                         ],
                     ],
                 ],
             ],
         ];
+
+
         $tableServiceMock = $this->getMockBuilder(TcaTableServiceInterface::class)->getMock();
         $tableServiceMock->expects($this->any())
             ->method('getTableName')

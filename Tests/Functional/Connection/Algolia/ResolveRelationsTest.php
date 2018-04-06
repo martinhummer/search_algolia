@@ -162,7 +162,7 @@ class ResolveRelationsTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group event
+     * @group event_translated
      * @test
      */
     public function translatedRelationsAreResolved()

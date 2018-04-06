@@ -64,7 +64,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group tt_content
+     * @group tt_content_test
      * @test
      */
     public function indexSingleTtContent()
@@ -83,12 +83,14 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
 
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
         $this->assertArraySubset(
-            [0 => ['header' => 'indexed content element']],
+            [0 => ['header' => 'indexed content element', 'starttime' => 1480686370]],
             $response['hits'],
             false,
             'tt_content Record was not indexed.'
         );
     }
+
+
 
     /**
      * @group bla

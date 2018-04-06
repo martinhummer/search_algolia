@@ -148,6 +148,8 @@ class Algolia implements Singleton, ConnectionInterface
      */
     public function deleteDocument(string $documentType, string $identifier)
     {
+        $this->logger->info('Deleting record.', ['Table: ' . $documentType, 'UID: ' . $identifier]);
+
         try {
             $request = $this->getIndex($this->connection, $documentType)->deleteObject($identifier); //PHP Algolia Search Client
             $this->taskObserver->setTaskId($request['taskID']); //store the current taskId
