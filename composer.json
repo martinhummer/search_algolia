@@ -24,9 +24,8 @@
     "require": {
         "php": ">=7.0.0",
         "typo3/cms": "~8.7",
-        "codappix/search_core": "^0.0.3",
+        "martinhummer/search_core": "dev-develop",
         "algolia/algoliasearch-client-php": "^1.23"
-        
     },
     "require-dev": {
         "phpunit/phpunit": "~6.2.0",
