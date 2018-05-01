@@ -87,10 +87,9 @@ class RelationResolverTest extends AbstractUnitTestCase
      */
     public function sysLanguageUidZeroIsKept()
     {
-        $originalRecord = [
+        $record = [
             'sys_language_uid' => 0,
         ];
-        $record = $originalRecord;
         $GLOBALS['TCA'] = [
             'tt_content' => [
                 'columns' => [
@@ -107,27 +106,28 @@ class RelationResolverTest extends AbstractUnitTestCase
                             'renderType' => 'selectSingle',
                             'special' => 'languages',
                             'type' => 'select',
-                            'exclude' => 1,
+                            'exclude' => '1',
                             'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.language',
                         ],
                     ],
                 ],
             ],
         ];
-
-
         $tableServiceMock = $this->getMockBuilder(TcaTableServiceInterface::class)->getMock();
         $tableServiceMock->expects($this->any())
             ->method('getTableName')
             ->willReturn('tt_content');
         $tableServiceMock->expects($this->any())
+            ->method('getLanguageUidColumn')
+            ->willReturn('sys_language_uid');
+        $tableServiceMock->expects($this->any())
             ->method('getColumnConfig')
-            ->willReturn($GLOBALS['TCA']['tt_content']['columns']['sys_language_uid']);
-
+            ->willReturn($GLOBALS['TCA']['tt_content']['columns']['sys_language_uid']['config']);
         $this->subject->resolveRelationsForRecord($tableServiceMock, $record);
-
         $this->assertSame(
-            $originalRecord,
+            [
+                'sys_language_uid' => 0,
+            ],
             $record,
             'sys_language_uid was not kept as zero.'
         );
