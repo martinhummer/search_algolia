@@ -65,5 +65,48 @@ class IndexPagesLanguageOverlayTableTest extends AbstractFunctionalTestCase
         );
     }
 
+    /**
+     * There is a problem with deleting pages_language_overlay records
+     * because DataHandler does not trigger a delete action for pages_language_overlay if the parent (default language) page gets deleted.
+     *
+     * Maybe we can find another hook in Datahandler which gets triggered if a page is deleted
+     *
+     * @group pages_language_overlay_delete
+     * @test
+     */
+    /*public function deleteSinglePage()
+    {
+
+        $this->initIndex('pages_language_overlay');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('pages_language_overlay')
+            ->indexDocument(2);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
+
+        $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
+        $tce->stripslashes_values = 0;
+        $tce->start([], [
+            'pages' => [
+                '2' => [
+                    'delete' => true,
+                ],
+            ],
+        ]);
+        $tce->process_cmdmap();
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        //$this->index->waitTask($taskId); //wait until Angolia has finished the task
+
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 0, 'Not exactly 0 documents were indexed.');
+    }*/
+
 
 }

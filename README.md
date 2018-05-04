@@ -2,12 +2,24 @@ Algolia Search Indexer for TYPO3 8LTS
 ============================================
 This Extension is in a very early stage and is heavily dependent on [Codappix/search_core](https://github.com/Codappix/search_core)
 
+
+Translation Handling
+----------------
+Indexing of records works fine until it comes to pages_language_overlay.
+This should be obsolete with TYPO3 9
+
+Delete & Update does not work for this indexer and we suggest to use a cron job to reindex this table:
+typo3cms index:delete pages_language_overlay 
+typo3cms index:index pages_language_overlay
+
+
 Testing your extension
 ============================================
 Test Setup
 ----------
 The first thing you need to do is to go to your extension directory and *"tell"* composer to set up
 the testing environment for a TYPO3 version you want to test against. For that, type `composer install` 
+
 
 Unit Tests
 ----------
@@ -34,3 +46,5 @@ You can execute the functional tests of your extension simply by calling phpunit
 
 Please note, that you need to specify a database user, that is allowed to create and delete databases for that to work.
 You can specify an arbitrary database name, it is only used to derive the test database names from.
+
+
