@@ -29,13 +29,29 @@ class TaskObserver implements Singleton
 {
     protected $taskId;
 
+    protected $taskIndex = 0;
+
+    /**
+     * set the task id
+     * it's possible that multiple task ids exist in parallel.
+     *
+     * @param $taskId
+     */
     public function setTaskId($taskId)
     {
-        $this->taskId = $taskId;
+        $this->taskId[] = $taskId;
     }
 
+    /**
+     * returns the current task id
+     *
+     * @return mixed
+     */
     public function getTaskId()
     {
-        return $this->taskId;
+        $currentTaskId = $this->taskId[$this->taskIndex];
+        $this->taskIndex++;
+        return $currentTaskId;
+
     }
 }

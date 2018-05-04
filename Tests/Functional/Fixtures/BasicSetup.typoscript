@@ -51,11 +51,33 @@ plugin {
 
                 }
 
-                #pages {
-                    #indexName = pages_test
-                    #indexer = Codappix\SearchCore\Domain\Index\TcaIndexer\PagesIndexer
-                    #abstractFields = abstract, description, bodytext
-                #}
+                pages {
+                    indexName = pages_test
+                    indexer = Mahu\SearchAlgolia\Domain\Index\TcaIndexer\PagesIndexer
+                    contentFields = bodytext
+
+                    mapping {
+                        CType {
+                            type = keyword
+                        }
+                    }
+                }
+
+                pages_language_overlay {
+                    indexName = pages_language_overlay_test
+                    indexer = Mahu\SearchAlgolia\Domain\Index\TcaIndexer\PagesLanguageOverlayIndexer
+                    contentFields = bodytext
+
+                    mapping {
+                        CType {
+                            type = keyword
+                        }
+                    }
+
+                    dataProcessing {
+                        1 = Codappix\SearchCore\DataProcessing\TcaRelationResolvingProcessor
+                    }
+                }
             }
 
             searching {

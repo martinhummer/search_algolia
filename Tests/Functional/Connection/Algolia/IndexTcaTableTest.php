@@ -64,7 +64,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-     * @group tt_content_test
+     * @group tt_content
      * @test
      */
     public function indexSingleTtContent()
@@ -159,11 +159,12 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     }
 
     /**
-    * @group delete
+    * @group tt_content_delete
     * @test
     */
     public function deleteSingleTtContent()
     {
+
         $this->initIndex('tt_content');
 
         \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
@@ -172,8 +173,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->indexDocument(6);
 
         $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
-        $this->index->waitTask($taskId); //wait until Angolia has finished the task
 
+        $this->index->waitTask($taskId);
 
         $tce = GeneralUtility::makeInstance(Typo3DataHandler::class);
         $tce->stripslashes_values = 0;
