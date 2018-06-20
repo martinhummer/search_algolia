@@ -43,6 +43,28 @@
         <categories>1</categories>
         <sys_language_uid>1</sys_language_uid>
     </tt_content>
+
+    <tt_content>
+        <uid>100</uid>
+        <pid>1</pid>
+        <tstamp>1480686370</tstamp>
+        <crdate>1480686370</crdate>
+        <hidden>0</hidden>
+        <sorting>72</sorting>
+        <CType>html</CType>
+        <header>ENGLISH Content</header>
+        <bodytext>some text</bodytext>
+        <image>0</image>
+        <layout>0</layout>
+        <deleted>0</deleted>
+        <cols>0</cols>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <colPos>0</colPos>
+        <filelink_sorting>0</filelink_sorting>
+        <categories>0</categories>
+        <sys_language_uid>0</sys_language_uid>
+    </tt_content>
     
     <sys_category>
         <uid>1</uid>

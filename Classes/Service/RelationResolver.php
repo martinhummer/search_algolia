@@ -64,7 +64,7 @@ class RelationResolver
 
         $relationUids = $loadDBGroup->tableArray[$columnConfig['foreign_table']];
 
-        if ($relationUids) {
+        if ($relationUids && $relationUids != 0) {
             foreach ($relationUids as $relationUid) {
                 $relationRecord = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($columnConfig['foreign_table'])
                     ->select(
@@ -83,6 +83,8 @@ class RelationResolver
             if ($relations) {
                 $record[$column] = $relations;
             }
+        } else {
+            $record[$column] = "";
         }
 
     }
