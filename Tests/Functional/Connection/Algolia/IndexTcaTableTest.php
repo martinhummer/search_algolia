@@ -134,6 +134,9 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
             ->getIndexer('tt_content')
             ->indexDocument(6);
 
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+        $this->index->waitTask($taskId);
+
         $this->getConnectionPool()->getConnectionForTable('tt_content')
             ->update(
                 'tt_content',
