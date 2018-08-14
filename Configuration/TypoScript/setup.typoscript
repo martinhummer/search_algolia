@@ -11,6 +11,8 @@ plugin {
     }
 }
 
+module.tx_searchcore < plugin.tx_searchcore
+
 [applicationContext = Development]
     plugin {
         tx_searchcore {

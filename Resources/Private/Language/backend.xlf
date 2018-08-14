@@ -7,16 +7,18 @@
             <trans-unit id="extMgm.adminApiKey">
                 <source>Algolia ADMIN Api Key</source>
             </trans-unit>
-
             <trans-unit id="extMgm.readOnlyApiKey">
                 <source>Algolia SEARCH ONLY Api Key</source>
             </trans-unit>
-
             <trans-unit id="extMgm.appId">
                 <source>Algolia APP ID</source>
             </trans-unit>
-
-
+            <trans-unit id="flexforms_general.type">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="flexform.algoliaIndex">
+                <source>Algolia Index to work with</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

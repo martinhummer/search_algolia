@@ -26,3 +26,24 @@ if (TYPO3_MODE === 'BE') {
         ]
     );
 }
+
+/**
+ * Register Frontend Plugin
+ */
+TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
+    'Mahu.search_algolia',
+    'Algolia',
+    'Algolia Frontend Plugin'
+);
+
+/**
+ * Add Flexform to frontend Plugin
+ */
+$pluginSignature = str_replace('_', '', $_EXTKEY) . '_algolia';
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_flexform';
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+    $pluginSignature,
+    'FILE:EXT:' .
+    $_EXTKEY .
+    '/Configuration/FlexForms/flexform_algolia.xml'
+);

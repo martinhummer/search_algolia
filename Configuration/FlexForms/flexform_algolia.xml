@@ -1,0 +1,57 @@
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>Algolia Frontend Plugin</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <!-- View -->
+                    <switchableControllerActions>
+                        <TCEforms>
+                            <label>LLL:EXT:search_algolia/Resources/Private/Language/backend.xlf:flexforms_general.type
+                            </label>
+                            <config>
+                                <type>select</type>
+                                <renderType>selectSingle</renderType>
+                                <items>
+                                    <numIndex index="1">
+                                        <numIndex index="0">
+                                            Algolia Frontend Search
+                                        </numIndex>
+                                        <numIndex index="1">AlgoliaFrontend->search</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </switchableControllerActions>
+
+
+                    <!-- Algolia Index -->
+                    <settings.algoliaIndex>
+                        <TCEforms>
+                            <label>LLL:EXT:search_algolia/Resources/Private/Language/backend.xlf:flexform.algoliaIndex</label>
+                            <onChange>reload</onChange>
+                            <config>
+                                <type>select</type>
+                                <itemsProcFunc>Mahu\SearchAlgolia\Hooks\Backend\ItemsProcFunc->getAlgoliaIndexes</itemsProcFunc>
+                                <renderType>selectSingle</renderType>
+                                <items>
+                                    <numIndex index="1">
+                                        <numIndex index="0"></numIndex>
+                                        <numIndex index="1"></numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.algoliaIndex>
+
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

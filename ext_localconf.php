@@ -26,3 +26,15 @@ call_user_func(
     },
     $_EXTKEY
 );
+
+/**
+ * Frontend Plugin
+ */
+\TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+    'Mahu.search_algolia',
+    'Algolia',
+    [
+        'AlgoliaFrontend' => 'search'
+    ],
+    []
+);
