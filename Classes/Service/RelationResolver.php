@@ -62,6 +62,19 @@ class RelationResolver
             $columnConfig
         );
 
+        /*
+         if($type === inline){
+            $loadDBGroup->start(
+            $record[$column],
+            $columnConfig['foreign_table'],
+            '',
+            $record['uid'],
+            $this->tableName,
+            $columnConfig
+        );
+        }
+         */
+
         $relationUids = $loadDBGroup->tableArray[$columnConfig['foreign_table']];
 
         if ($relationUids && $relationUids != 0) {
