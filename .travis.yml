@@ -1,0 +1,40 @@
+language: php
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.1
+      env: TYPO3_VERSION=^8
+    - php: 7.0
+      env: TYPO3_VERSION=^8
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - parallel
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - composer self-update
+  - composer --version
+
+before_script:
+  - phpenv config-rm xdebug.ini
+  - composer require typo3/minimal=$TYPO3_VERSION
+  # Restore composer.json
+  - git checkout composer.json
+  - export TYPO3_PATH_WEB=$PWD/.Build/Web
+
+script:
+  - >
+  echo;
+  echo "Running functional tests";
+  echo;
+  echo;
+  rm -Rf .Build/Web/typo3temp/*;
+  typo3DatabaseName="zzzzz"     typo3DatabaseUsername="root"     typo3DatabasePassword="root"     typo3DatabaseHost="localhost"     TYPO3_PATH_WEB=.Build/web     .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml --group pages

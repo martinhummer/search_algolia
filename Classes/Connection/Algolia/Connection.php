@@ -56,8 +56,8 @@ class Connection implements Singleton
         $this->algoliaClient = $algoliaClient;
         if ($this->algoliaClient === null) {
             $this->algoliaClient = new \AlgoliaSearch\Client(
-                $configuration->get('connections.algolia.applicationID'),
-                $configuration->get('connections.algolia.apiKey')
+                $this->getAppId(),
+                $this->getAppKey()
             );
         }
     }
@@ -79,5 +79,21 @@ class Connection implements Singleton
      */
     public function getConfiguration() {
         return $this->configuration;
+    }
+
+    protected function getAppId(){
+        if(getenv('ALGOLIA_APP_ID')) {
+            return getenv('ALGOLIA_APP_ID');
+        } else {
+            $this->configuration->get('connections.algolia.applicationID');
+        }
+    }
+
+    protected function getAppKey(){
+        if(getenv('ALGOLIA_API_KEY')) {
+            return getenv('ALGOLIA_API_KEY');
+        } else {
+            $this->configuration->get('connections.algolia.apiKey');
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace Mahu\SearchAlgolia\Tests\Functional;
  */
 
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase as CoreTestCase;
+use Symfony\Component\Dotenv\Dotenv;
 
 /**
  * All functional tests should extend this base class.
@@ -38,6 +39,9 @@ abstract class AbstractFunctionalTestCase extends CoreTestCase
     public function setUp()
     {
         parent::setUp();
+
+        $dotenv = new Dotenv();
+        $dotenv->load(__DIR__.'/.env');
 
         $this->setUpBackendUserFromFixture(1);
         \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->initializeLanguageObject();
@@ -70,6 +74,6 @@ abstract class AbstractFunctionalTestCase extends CoreTestCase
      */
     protected function getTypoScriptFilesForFrontendRootPage()
     {
-        return ['EXT:search_algolia/Tests/Functional/Fixtures/AlgoliaCredentials.typoscript', 'EXT:search_algolia/Tests/Functional/Fixtures/BasicSetup.typoscript'];
+        return ['EXT:search_algolia/Tests/Functional/Fixtures/BasicSetup.typoscript'];
     }
 }
