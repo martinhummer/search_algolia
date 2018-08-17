@@ -20,6 +20,7 @@ before_script:
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
   - touch $PWD/Tests/Functional/.env
+  - wget https://keys.algolia.engineering/client/algolia-keys && chmod +x algolia-keys
 
 script:
   - >
@@ -29,4 +30,4 @@ script:
     export typo3DatabaseHost="localhost";
     export typo3DatabaseUsername="root";
     export typo3DatabasePassword="";
-    .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml --group pages
+    $(./algolia-keys export) && .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml --group pages
