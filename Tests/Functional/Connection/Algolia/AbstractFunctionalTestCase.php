@@ -76,7 +76,8 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
 
     protected function cleanUp()
     {
-        $this->client->deleteIndex($this->indexName);
+        $request = $this->client->deleteIndex($this->indexName);
+        $this->index->waitTask($request['taskID']);
     }
 
     /**
@@ -90,8 +91,10 @@ abstract class AbstractFunctionalTestCase extends BaseFunctionalTestCase
         $this->indexName = $this->getIndexNameFromConfiguration($documentType);
 
         if ($this->indexName) {
+            $this->client->deleteIndex($this->indexName); //clean up first
             $this->index = $this->client->initIndex($this->indexName);
         } else {
+            $this->client->deleteIndex($documentType); //clean up first
             $this->index = $this->client->initIndex($documentType);
         }
     }
