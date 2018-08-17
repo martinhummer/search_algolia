@@ -8,7 +8,7 @@ before_install:
   - composer --version
 
 before_script:
-  # - composer require typo3/minimal=^8
+  - composer require typo3/cms
   # Restore composer.json
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
