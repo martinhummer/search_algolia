@@ -13,7 +13,7 @@ before_install:
 
 before_script:
   - phpenv config-rm xdebug.ini
-  - composer require typo3/cms
+  - composer require typo3/cms=^8
   # Restore composer.json
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
