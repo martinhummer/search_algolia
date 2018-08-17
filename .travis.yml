@@ -3,11 +3,16 @@ language: php
 php:
   - 7.0
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 before_install:
   - composer self-update
   - composer --version
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - composer require typo3/cms
   # Restore composer.json
   - git checkout composer.json
