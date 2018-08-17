@@ -21,3 +21,4 @@ script:
     export typo3DatabaseHost="localhost";
     export typo3DatabaseUsername="root";
     export typo3DatabasePassword="";
+    .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml
