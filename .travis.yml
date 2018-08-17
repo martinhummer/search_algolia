@@ -19,6 +19,7 @@ before_script:
   # Restore composer.json
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
+  - touch $PWD/Tests/Functional/.env
 
 script:
   - >
@@ -28,4 +29,4 @@ script:
     export typo3DatabaseHost="localhost";
     export typo3DatabaseUsername="root";
     export typo3DatabasePassword="";
-    .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml
+    .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml --group pages
