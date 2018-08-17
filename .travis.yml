@@ -3,5 +3,21 @@ language: php
 php:
   - 7.0
 
+before_install:
+  - composer self-update
+  - composer --version
+
 before_script:
-    - composer install
+     - composer require typo3/minimal=^8
+      # Restore composer.json
+      - git checkout composer.json
+      - export TYPO3_PATH_WEB=$PWD/.Build/Web
+
+script:
+  - >
+      echo;
+      export typo3DatabaseName="typo3";
+      export typo3DatabaseHost="localhost";
+      export typo3DatabaseUsername="root";
+      export typo3DatabasePassword="";
+      .Build/bin/phpunit -v -c Tests/Functional/FunctionalTests.xml
