@@ -32,7 +32,7 @@ class ResolveFalTest extends AbstractFunctionalTestCase
     {
         return array_merge(
             parent::getDataSets(),
-            ['Tests/Functional/Fixtures/Indexing/ResolveRelations.xml']
+            ['EXT:search_algolia/Tests/Functional/Fixtures/Indexing/ResolveRelations.xml']
         );
     }
 

@@ -43,7 +43,7 @@ class Tsfe implements SingletonInterface
             $groupListBackup = $GLOBALS['TSFE']->gr_list;
             $GLOBALS['TSFE']->gr_list = $pageRecord['fe_group'];
             $GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
-            $GLOBALS['TSFE']->getPageAndRootline();
+            self::getPageAndRootlineOfTSFE($pageId);
             // restore gr_list
             $GLOBALS['TSFE']->gr_list = $groupListBackup;
             $GLOBALS['TSFE']->initTemplate();
@@ -70,6 +70,31 @@ class Tsfe implements SingletonInterface
             $GLOBALS['TSFE'] = $tsfeCache[$cacheId];
             $GLOBALS['TSFE']->settingLocale();
         }
+    }
+
+    /**
+     * @deprecated This is only implemented to provide compatibility for TYPO3 8 and 9 when we drop TYPO3 8 support this
+     * should changed to use a middleware stack
+     * @param integer $pageId
+     */
+    private static function getPageAndRootlineOfTSFE($pageId)
+    {
+        //@todo This can be dropped when TYPO3 8 compatibility is dropped
+        if (self::getIsTYPO3VersionBelow9()) {
+            $GLOBALS['TSFE']->getPageAndRootline();
+        } else {
+            //@todo When we drop the support of TYPO3 8 we should use the frontend middleware stack instead of initializing this on our own
+            $GLOBALS['TSFE']->getPageAndRootlineWithDomain(1);
+        }
+    }
+
+    /**
+     * @todo This method is just added for pages_language_overlay compatibility checks and will be removed when TYPO8 support is dropped
+     * @return boolean
+     */
+    public static function getIsTYPO3VersionBelow9()
+    {
+        return (bool)version_compare(TYPO3_branch, '9.0', '<');
     }
 
 }

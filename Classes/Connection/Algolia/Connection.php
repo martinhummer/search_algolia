@@ -85,7 +85,7 @@ class Connection implements Singleton
         if(getenv('ALGOLIA_APP_ID')) {
             return getenv('ALGOLIA_APP_ID');
         } else {
-            $this->configuration->get('connections.algolia.applicationID');
+            return $this->configuration->getIfExists('connections.algolia.applicationID');
         }
     }
 
@@ -93,7 +93,7 @@ class Connection implements Singleton
         if(getenv('ALGOLIA_API_KEY')) {
             return getenv('ALGOLIA_API_KEY');
         } else {
-            $this->configuration->get('connections.algolia.apiKey');
+            return $this->configuration->getIfExists('connections.algolia.apiKey');
         }
     }
 }

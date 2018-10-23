@@ -10,7 +10,7 @@ use Mahu\SearchAlgolia\Service\Log;
 /**
  * Class ModuleController for backend modules
  */
-class ModuleController extends \TYPO3\CMS\Belog\Controller\AbstractController
+class ModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 {
 
     /**

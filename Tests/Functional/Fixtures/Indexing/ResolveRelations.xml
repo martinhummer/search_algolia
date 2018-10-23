@@ -81,6 +81,7 @@
         <items>1</items>
         <l10n_parent>0</l10n_parent>
         <sys_language_uid>0</sys_language_uid>
+        <l10n_diffsource>0</l10n_diffsource>
     </sys_category>
 
     <sys_category>
@@ -98,6 +99,7 @@
         <items>1</items>
         <l10n_parent>1</l10n_parent>
         <sys_language_uid>1</sys_language_uid>
+        <l10n_diffsource>0</l10n_diffsource>
     </sys_category>
 
     <sys_category_record_mm>
@@ -160,6 +162,7 @@
         <tablenames>tt_content</tablenames>
         <table_local>sys_file</table_local>
         <fieldname>image</fieldname>
+        <l10n_diffsource>0</l10n_diffsource>
     </sys_file_reference>
 
     <sys_file_reference>
@@ -171,6 +174,7 @@
         <tablenames>tt_content</tablenames>
         <table_local>sys_file</table_local>
         <fieldname>image</fieldname>
+        <l10n_diffsource>0</l10n_diffsource>
     </sys_file_reference>
 
     

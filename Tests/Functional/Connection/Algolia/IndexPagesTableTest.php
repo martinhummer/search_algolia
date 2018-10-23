@@ -32,7 +32,7 @@ class IndexPagesTableTest extends AbstractFunctionalTestCase
     {
         return array_merge(
             parent::getDataSets(),
-            ['Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
+            ['EXT:search_algolia/Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
         );
     }
 
@@ -61,6 +61,36 @@ class IndexPagesTableTest extends AbstractFunctionalTestCase
         $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
         $this->assertArraySubset(
             [0 => ['content' => 'this is the content of header content element that should get indexed Some text in paragraph']],
+            $response['hits'],
+            false,
+            'pages Record was not indexed.'
+        );
+    }
+
+    /**
+     * @group pages
+     * @test
+     */
+    public function indexTranslatedPage()
+    {
+        $this->initIndex('pages');
+
+        \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(IndexerFactory::class)
+            ->getIndexer('pages')
+            ->indexDocument(2);
+
+        $taskId = $this->taskObserver->getTaskId(); //holds the current taskId
+
+        $this->index->waitTask($taskId);
+        $response = $this->index->search('*');
+
+        $this->assertSame($response['nbHits'], 1, 'Not exactly 1 document was indexed.');
+        $this->assertArraySubset(
+            [0 => [
+                'title' => '[Uebersetzung Deutsch] Startseite',
+                'content' => '[Translate to Deutsch:] Deutscher Inhalt'
+            ]],
             $response['hits'],
             false,
             'pages Record was not indexed.'

@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 7.0
+  - 7.2
 
 cache:
   directories:
@@ -20,7 +20,7 @@ before_script:
   - if [ "$dependencies" = "highest" ]; then composer update -n; fi;
   - composer show -i
   - phpenv config-rm xdebug.ini
-  - composer require typo3/cms=^8
+  - composer require typo3/minimal=^9
   # Restore composer.json
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web

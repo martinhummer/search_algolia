@@ -7,6 +7,7 @@ plugin {
                     apiKey = {$plugin.tx_searchalgolia.settings.connections.algolia.apiKey}
                 }
             }
+            debug = 0
         }
     }
 }

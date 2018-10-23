@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dataset>
+    <pages>
+        <uid>2</uid>
+        <pid>0</pid>
+        <title>[Uebersetzung Deutsch] Startseite</title>
+        <sys_language_uid>1</sys_language_uid>
+        <l10n_parent>1</l10n_parent>
+        <l10n_source>1</l10n_source>
+    </pages>
     <tt_content>
         <uid>6</uid>
         <pid>1</pid>
@@ -19,6 +27,29 @@
         <endtime>0</endtime>
         <colPos>0</colPos>
         <filelink_sorting>0</filelink_sorting>
+    </tt_content>
+
+    <tt_content>
+        <uid>9999</uid>
+        <pid>1</pid>
+        <tstamp>1480686370</tstamp>
+        <crdate>1480686370</crdate>
+        <hidden>0</hidden>
+        <sorting>72</sorting>
+        <CType>header</CType>
+        <header>indexed due to language</header>
+        <bodytext>[Translate to Deutsch:] Deutscher Inhalt</bodytext>
+        <media>0</media>
+        <layout>0</layout>
+        <deleted>0</deleted>
+        <cols>0</cols>
+        <starttime>0</starttime>
+        <endtime>0</endtime>
+        <colPos>0</colPos>
+        <filelink_sorting>0</filelink_sorting>
+        <sys_language_uid>1</sys_language_uid>
+        <l18n_parent>6</l18n_parent>
+        <l10n_source>6</l10n_source>
     </tt_content>
 
     <tt_content>

@@ -15,27 +15,28 @@ class PagesIndexer extends SearchCorePagesIndexer
 {
 
     /**
-     * Because of language handling we need to add a constraint (sys_language_uid = 0)
-     * If this constraint is missing, the PagesIndexer would index all available tt_content elements (also translalted ones witch sys_language_uid != 0)
+     * Fetches tt_content records corresponding to page record
+     * Takes language handling into account, which is the main difference to search_core implementation
      *
-     * We can not set this constraint via typocsript configurtion for tt_content because this would also affect PagesLanguageOverlayIndexer
-     *
-     * @param int $uid
+     * @param int page $uid
      * @return array
      */
     protected function fetchContentForPage(int $uid) : array
     {
+        $page = $this->getRecord($uid);
+
         if ($this->contentTableService instanceof TcaTableService) {
             $queryBuilder = $this->contentTableService->getQuery();
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->eq(
                     $this->contentTableService->getTableName() . '.pid',
-                    $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT)
+                    //if l10n_parent is set, this page is translated and l10n_parent is set to the non translated page uid
+                    //tt_content pid is always pointing to the uid of the non translated page uid
+                    $queryBuilder->createNamedParameter($page['l10n_parent'] ? (int)$page['l10n_parent'] : $uid, \PDO::PARAM_INT)
                 ),
-                //constraint added for language handling, this is the only part which is modified in PagesIndexer
                 $queryBuilder->expr()->eq(
                     $this->contentTableService->getTableName() . '.sys_language_uid',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter((int)$page['sys_language_uid'], \PDO::PARAM_INT)
                 )
             );
             $contentElements = $queryBuilder->execute()->fetchAll();

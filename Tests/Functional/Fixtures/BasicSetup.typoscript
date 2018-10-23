@@ -2,7 +2,7 @@
 plugin {
     tx_searchcore {
         settings {
-
+            debug = 0
             indexing {
                 tt_content {
                     indexName = tt_content_test

@@ -32,7 +32,7 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
     {
         return array_merge(
             parent::getDataSets(),
-            ['Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
+            ['EXT:search_algolia/Tests/Functional/Fixtures/Indexing/IndexTcaTable.xml']
         );
     }
 
@@ -54,13 +54,8 @@ class IndexTcaTableTest extends AbstractFunctionalTestCase
         $this->index->waitTask($taskId);
         $response = $this->index->search('*');
 
-        $this->assertSame($response['nbHits'], 2, 'Not exactly 2 documents were indexed.');
-        $this->assertArraySubset(
-            [0 => ['header' => 'indexed content element']],
-            $response['hits'],
-            false,
-            'tt_content Record was not indexed.'
-        );
+        $this->assertSame($response['nbHits'], 3, 'Not exactly 3 documents were indexed.');
+
     }
 
     /**
