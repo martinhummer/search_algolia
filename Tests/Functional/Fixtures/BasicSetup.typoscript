@@ -2,7 +2,7 @@
 plugin {
     tx_searchcore {
         settings {
-            debug = 0
+            debug = 1
             indexing {
                 tt_content {
                     indexName = tt_content_test
@@ -60,22 +60,6 @@ plugin {
                         CType {
                             type = keyword
                         }
-                    }
-                }
-
-                pages_language_overlay {
-                    indexName = pages_language_overlay_test
-                    indexer = Mahu\SearchAlgolia\Domain\Index\TcaIndexer\PagesLanguageOverlayIndexer
-                    contentFields = bodytext
-
-                    mapping {
-                        CType {
-                            type = keyword
-                        }
-                    }
-
-                    dataProcessing {
-                        1 = Codappix\SearchCore\DataProcessing\TcaRelationResolvingProcessor
                     }
                 }
             }
