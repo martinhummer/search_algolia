@@ -47,3 +47,14 @@ $TCA['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature] = 'pi_
     $_EXTKEY .
     '/Configuration/FlexForms/flexform_algolia.xml'
 );
+
+
+$GLOBALS['TYPO3_CONF_VARS']['LOG']['Mahu']['SearchAlgolia'] = [
+    'writerConfiguration' => [
+        \TYPO3\CMS\Core\Log\LogLevel::INFO => [
+            \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
+                'logFile' => '/log/algolia.log'
+            ]
+        ]
+    ],
+];
