@@ -21,6 +21,7 @@ namespace Mahu\SearchAlgolia\Connection\Algolia;
  * 02110-1301, USA.
  */
 
+use AlgoliaSearch\Index;
 use Codappix\SearchCore\Configuration\ConfigurationContainerInterface;
 use TYPO3\CMS\Core\SingletonInterface as Singleton;
 
@@ -58,9 +59,19 @@ class IndexFactory implements Singleton
         $indexName = $this->getIndexNameFromConfiguration($documentType);
 
         if ($indexName) {
+            /** @var Index $index */
             $index = $connection->getClient()->initIndex($indexName);
         } else {
+            /** @var Index $index */
             $index = $connection->getClient()->initIndex($documentType);
+        }
+
+        $facetFields = $this->configuration->getIfExists('indexing.' . $documentType . '.facetFields');
+
+        if ($facetFields) {
+            $index->setSettings([
+                'attributesForFaceting' => explode(',', $facetFields)
+            ]);
         }
 
         return $index;
