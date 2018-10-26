@@ -1,4 +1,4 @@
-Algolia Search Indexer for TYPO3 8LTS
+Algolia Search Indexer for TYPO3 9LTS
 ============================================
 This Extension depends on [Codappix/search_core](https://github.com/Codappix/search_core)
 
