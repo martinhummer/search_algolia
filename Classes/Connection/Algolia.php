@@ -115,8 +115,18 @@ class Algolia implements Singleton, ConnectionInterface
 
     public function addDocuments(string $documentType, array $documents)
     {
-        foreach ($documents as $document) {
-            $this->addDocument($documentType, $document);
+        $numDocumets = count($documents);
+        $i = 0;
+
+        foreach ($documents as $key => $document) {
+            try {
+                $request = $this->getIndex($this->connection, $documentType)->addObject($document, $document['uid']); //PHP Algolia Search Client
+                if(++$i === $numDocumets) {
+                    $this->taskObserver->setTaskId($request['taskID']); //for predictable functional tests it's important that only the last taskID gets passed
+                }
+            } catch (AlgoliaConnectionException $e) {
+                $this->logger->error('Error while indexing Record', ['Table: ' . $documentType, 'UID: ' . $document['uid'], 'ErrorMessage: ' . $e->getMessage()]);
+            }        
         }
 
     }
