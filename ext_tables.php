@@ -52,7 +52,7 @@ $GLOBALS['TYPO3_CONF_VARS']['LOG']['Mahu']['SearchAlgolia'] = [
     'writerConfiguration' => [
         \TYPO3\CMS\Core\Log\LogLevel::INFO => [
             \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-                'logFile' => 'typo3temp/log/algolia.log'
+                'logFile' => \TYPO3\CMS\Core\Core\Environment::getVarPath(). '/log/algolia.log'
             ]
         ]
     ],
