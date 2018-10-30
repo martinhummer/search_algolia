@@ -4,5 +4,5 @@ namespace Mahu\SearchAlgolia\Compatibility;
 
 interface EnvironmentInterface
 {
-    public function getVarPath();
+    public function loggingPath();
 }

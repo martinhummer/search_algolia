@@ -6,8 +6,8 @@ use Mahu\SearchAlgolia\Compatibility\EnvironmentInterface;
 
 class Environment implements EnvironmentInterface
 {
-    public function getVarPath()
+    public function loggingPath()
     {
-        return 'typo3temp';
+        return 'typo3temp/log';
     }
 }
