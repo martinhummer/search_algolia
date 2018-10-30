@@ -2,7 +2,7 @@
 
 namespace Mahu\SearchAlgolia;
 
-use Mahu\SearchAlgolia\Utility\EnvironmentInterface;
+use Mahu\SearchAlgolia\Compatibility\EnvironmentInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
