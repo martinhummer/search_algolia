@@ -23,6 +23,8 @@ call_user_func(
             }
         }'
         );
+
+        \Mahu\SearchAlgolia\Compatibility\ImplementationRegistrationService::registerImplementations();
     },
     $_EXTKEY
 );
