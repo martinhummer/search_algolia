@@ -17,12 +17,15 @@ call_user_func(
                         algolia {
                             applicationID = ' . $settings['appId'] .'
                             apiKey = ' . $settings['adminApiKey'] .'
+                            readOnlyApiKey = ' . $settings['readOnlyApiKey'] .'
                         }
                     }
                 }
             }
         }'
         );
+
+        \Mahu\SearchAlgolia\Compatibility\ImplementationRegistrationService::registerImplementations();
     },
     $_EXTKEY
 );
