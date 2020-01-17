@@ -2,17 +2,6 @@ Algolia Search Indexer for TYPO3 9LTS
 ============================================
 This Extension depends on [Codappix/search_core](https://github.com/Codappix/search_core)
 
-
-Known Bugs - Translation Handling
-----------------
-Indexing of records works fine until it comes to pages_language_overlay.
-This should be obsolete with TYPO3 9
-
-Delete & Update does not work for this indexer and i suggest to use a cron job to reindex this table:
-typo3cms index:delete pages_language_overlay 
-typo3cms index:index pages_language_overlay
-
-
 Testing the extension
 ============================================
 Test Setup
@@ -40,7 +29,7 @@ You can now execute the unit tests of your extension simply by calling phpunit w
 
 Functional Tests
 ----------------
-You can execute the functional tests of your extension simply by calling phpunit with the following command::
+You can execute the functional tests of your extension by calling phpunit with the following command::
 
     typo3DatabaseName="yourDatabaseName" \
     typo3DatabaseUsername="yourUsername" \
